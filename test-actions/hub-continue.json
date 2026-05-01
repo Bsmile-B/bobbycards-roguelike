@@ -1,0 +1,15 @@
+{
+  "description": "Continue from hub to next stage intro.",
+  "target": "#hub-continue",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-continue"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

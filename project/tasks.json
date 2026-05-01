@@ -1,0 +1,302 @@
+[
+  {
+    "id": "T1",
+    "title": "Étendre les types : Stage, StageConfig, Consumable, ShopItem, LootBox, RunRelic, ChestTier, HubState",
+    "owner_role": "frontend-dev",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "Tous les types listés en §5.1 du specs.md sont déclarés dans App.tsx. tsc passe."
+  },
+  {
+    "id": "T2",
+    "title": "Étendre RunState (stage, wave, consumables, relics, shopDiscountPercent, blessingsUsed) et SaveData (saveVersion, bestStage, finalBossDefeats, lifetimeLootboxes)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T1"],
+    "status": "done",
+    "acceptance": "RunState et SaveData étendus. normalizeSave tolérant aux saves V1. saveVersion=2 écrit."
+  },
+  {
+    "id": "T3",
+    "title": "Définir STAGE_CONFIGS (3 stages : nom, accent, pools, boss). Modifier createEnemy pour piocher dans le pool du stage courant et utiliser les boss dédiés",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T2"],
+    "status": "done",
+    "acceptance": "Les 3 boss du brief (Gardien des Cendres, Sorcière du Vide, Roi Brisé) apparaissent vague 10/20/30. Pool ennemis stage-spécifique."
+  },
+  {
+    "id": "T4",
+    "title": "Ajouter screen 'stage-intro' et action ENTER_STAGE_INTRO / START_STAGE. Brancher au flux START_RUN et HUB_CONTINUE",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T3"],
+    "status": "done",
+    "acceptance": "Au démarrage de chaque stage, écran intro s'affiche avec nom/numéro/boss à venir. Bouton 'Entrer' (#stage-intro-enter) lance le combat."
+  },
+  {
+    "id": "T5",
+    "title": "Composant RunProgress (barre 3 stages × 10 vagues, hub markers). Visible en combat et en hub",
+    "owner_role": "ui-designer",
+    "depends_on": ["T2"],
+    "status": "done",
+    "acceptance": "design/run-progress.md décrit la barre, les états (passé/courant/futur/boss/hub). Tokens d'accent par stage. Tient en 1280x720."
+  },
+  {
+    "id": "T6",
+    "title": "Implémenter RunProgress en React + CSS",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T5"],
+    "status": "done",
+    "acceptance": "Composant intégré au CombatHud (en haut) et en hub header. Stage/wave/boss-in lisibles."
+  },
+  {
+    "id": "T7",
+    "title": "Design system : tokens par stage (--stage-1-accent, --stage-2-accent, --stage-3-accent), classes 'stage-1/2/3' sur app-shell",
+    "owner_role": "ui-designer",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "design/design-system.md liste palettes : stage1 bleu froid, stage2 violet sombre, stage3 or terni/rouge sombre. Compatibles avec le dark fantasy existant."
+  },
+  {
+    "id": "T8",
+    "title": "Wireframes hub (header + 5 onglets + bouton continuer)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T7"],
+    "status": "done",
+    "acceptance": "design/hub.md couvre layout 1280x720, onglets, zones centrales par tab, bouton continuer."
+  },
+  {
+    "id": "T9",
+    "title": "Implémenter le HubScreen + actions ENTER_HUB, HUB_SET_TAB, HUB_CONTINUE",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T8", "T4"],
+    "status": "done",
+    "acceptance": "Après boss stage 1/2 → screen='hub'. 5 onglets cliquables. 'Continuer' → stage-intro suivant."
+  },
+  {
+    "id": "T10",
+    "title": "Définir SHOP_POOLS par stage (items du brief, prix, effets typés)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T1"],
+    "status": "done",
+    "acceptance": "Pools 4-6 items par stage avec tous les items et prix exacts du brief §4.4."
+  },
+  {
+    "id": "T11",
+    "title": "Wireframe écran boutique (liste items, prix, descriptions, bouton acheter, bouton relancer)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T8"],
+    "status": "done",
+    "acceptance": "design/shop.md décrit la grille d'items, états (achetable/épuisé/insuffisant), couleur de rareté."
+  },
+  {
+    "id": "T12",
+    "title": "Implémenter onglet boutique + actions HUB_BUY_SHOP_ITEM, HUB_REROLL_SHOP. Effets appliqués sur run/save",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T11", "T10", "T9"],
+    "status": "done",
+    "acceptance": "Achat déduit l'or, applique l'effet (heal, shield, stat-boost, lootbox-add, consumable-add, etc.). Reroll coûte 15 or."
+  },
+  {
+    "id": "T13",
+    "title": "Définir LOOTBOX_TABLES (poids des 4 tiers selon brief §4.5)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T1"],
+    "status": "done",
+    "acceptance": "Tables small/rare/epic/runic conformes au brief. Fonction rollLootbox pure et testable."
+  },
+  {
+    "id": "T14",
+    "title": "Wireframe + animation écran lootbox (coffre fermé → flash → révélation)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T7"],
+    "status": "done",
+    "acceptance": "design/lootbox.md décrit transitions CSS (durées, easings), états du coffre, affichage des probas."
+  },
+  {
+    "id": "T15",
+    "title": "Implémenter onglet lootbox + screen 'lootbox' + actions HUB_BUY_LOOTBOX, OPEN_LOOTBOX, CLOSE_LOOTBOX",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T14", "T13", "T9"],
+    "status": "done",
+    "acceptance": "Achat → transition vers screen=lootbox → clic ouvre, révèle résultat, retour hub."
+  },
+  {
+    "id": "T16",
+    "title": "Wireframe onglet recyclage (liste persos forgés, modale de confirmation)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T8"],
+    "status": "done",
+    "acceptance": "design/recycle.md couvre listing, badge 'forgé', modale 'définitif', états."
+  },
+  {
+    "id": "T17",
+    "title": "Implémenter onglet recyclage + actions HUB_RECYCLE_REQUEST, HUB_RECYCLE_CONFIRM, HUB_RECYCLE_CANCEL",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T16", "T9"],
+    "status": "done",
+    "acceptance": "Filtrage starters/équipe actuelle. Remboursements selon table specs.md §4.6. Persistance localStorage."
+  },
+  {
+    "id": "T18",
+    "title": "Wireframe onglet équipe au hub (équipe actuelle, héros disponibles, swap gratuit/payant)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T8"],
+    "status": "done",
+    "acceptance": "design/hub-team.md décrit layout, indicateur swap gratuit, coût 75 or pour les suivants."
+  },
+  {
+    "id": "T19",
+    "title": "Implémenter onglet équipe + action HUB_SWAP_HERO. Héros entrant à 70% PV, 1er swap gratuit, suivants 75 or",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T18", "T9"],
+    "status": "done",
+    "acceptance": "Swap met à jour run.team. freeSwapsUsed tracké. Or déduit après le 1er.",
+    "note": "Flow 2-clics implémenté + IDs composites cachés team-swap-{outId}-{inId} pour Playwright."
+  },
+  {
+    "id": "T20",
+    "title": "Onglet stats au hub (lecture seule des stats run + résumé stage)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T9"],
+    "status": "done",
+    "acceptance": "Affiche damageDealt, taken, healingDone, skillsUsed, K.O, boss vaincus, vies perdues, stage courant."
+  },
+  {
+    "id": "T21",
+    "title": "Définir CONSUMABLES (4 kinds, effets typés)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T1"],
+    "status": "done",
+    "acceptance": "potion-heal, bomb-runic, shield-emergency, vial-antipoison déclarés avec leurs effets."
+  },
+  {
+    "id": "T22",
+    "title": "Wireframe inventaire consommables : 3 slots en HUD combat + UI hub",
+    "owner_role": "ui-designer",
+    "depends_on": ["T7"],
+    "status": "done",
+    "acceptance": "design/consumables.md décrit l'intégration 3 slots discrète sous CombatFooter, sans refondre HUD."
+  },
+  {
+    "id": "T23",
+    "title": "Implémenter consumables : actions ADD_CONSUMABLE, USE_CONSUMABLE, REPLACE_CONSUMABLE. Mini-HUD en combat",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T22", "T21"],
+    "status": "done",
+    "acceptance": "Achat consommable ajoute au slot. Plein → modal remplacer. Clic en combat applique l'effet, retire du slot.",
+    "note": "Modal 'remplacer' non implémenté — l'achat avec slots pleins retourne un notice 'Inventaire plein'. À itérer si l'utilisateur veut le flow modal complet."
+  },
+  {
+    "id": "T24",
+    "title": "Refondre récompenses : pool étendu (or, fragments, mini-loot, soin) + récompenses mid-stage (vague 5/15/25) + récompenses post-boss (relique de boss parmi 3)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T2", "T13"],
+    "status": "in-progress",
+    "acceptance": "createRewardOptions varie selon contexte. Boss stage 1/2 offrent 3 reliques + or + lootbox + accès hub.",
+    "note": "Or bonus contextualisé (vague normale/5/boss) implémenté + bonus de soin sur boss. Mais le pool de récompenses reste majoritairement les bonus stat existants ; pas de pool 'reliques de boss parmi 3' distinct. À enrichir en V2.1."
+  },
+  {
+    "id": "T25",
+    "title": "Wireframe écran coffre final tier-aware (5 visuels : abîmé/bronze/argent/royal/runique)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T7"],
+    "status": "done",
+    "acceptance": "design/chest.md décrit les 5 visuels CSS (matériaux, couleurs, runes pour runique)."
+  },
+  {
+    "id": "T26",
+    "title": "Implémenter ChestTier dans openChest : calcul du tier selon stats run, loot scalé",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T25", "T2"],
+    "status": "done",
+    "acceptance": "damaged si fight<10. bronze si bossesDefeated>=1. silver si >=2. royal si boss final. runic si boss final + 2/3 vies + 0 bénédiction."
+  },
+  {
+    "id": "T27",
+    "title": "Étendre render_game_to_text pour exposer stage, wave, hub state, consumables, chestTier, lootboxState",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T9", "T15", "T23", "T26"],
+    "status": "done",
+    "acceptance": "JSON valide à tout moment. Champs existants conservés. Nouveaux champs présents."
+  },
+  {
+    "id": "T28",
+    "title": "Ajouter test-actions JSON pour le golden path V2 (stage1→hub→lootbox→stage2→stage3→gameover)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T27"],
+    "status": "done",
+    "acceptance": "Nouveaux fichiers test-actions/v2-*.json. Anciens fichiers conservés. Coordonnées stables.",
+    "note": "Fichiers ajoutés : stage-intro-enter, hub-buy-shop, hub-buy-lootbox, open-lootbox, hub-recycle, hub-swap, hub-continue, use-consumable, shop-reroll. Format de coordonnées : selectors CSS plutôt que x/y absolus, plus robuste pour Playwright."
+  },
+  {
+    "id": "T29",
+    "title": "Validation finale : npm run build, parcours Playwright golden path complet, 0 erreur console",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T28"],
+    "status": "in-progress",
+    "acceptance": "Build OK. Tous les critères de succès §8 du specs cochés.",
+    "note": "npm run build OK. Dev server démarre sur 5173 sans erreur. Playwright non disponible dans cette session — golden path complet à valider en run réelle par l'utilisateur."
+  },
+  {
+    "id": "T30",
+    "title": "Implémenter modal REPLACE_CONSUMABLE quand inventaire plein (achat shop ou récompense)",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T23"],
+    "status": "done",
+    "acceptance": "Quand HUB_BUY_SHOP_ITEM ou ADD_CONSUMABLE échoue par slots pleins : afficher dialogue 'Remplacer un consommable ?' avec choix de slot 0/1/2 ou 'Abandonner'. Action REPLACE_CONSUMABLE déjà en place (L2210), il manque l'UI déclenchante et un état pendingConsumablePurchase: { kind } | null.",
+    "severity": "major",
+    "fixes": "review.md Major-1"
+  },
+  {
+    "id": "T31",
+    "title": "Pool de récompenses post-boss : 3 reliques de boss parmi 3 + lootbox gratuite",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T24"],
+    "status": "done",
+    "note": "BOSS_RELIC_POOL (9 reliques) + BOSS_RUNIC_RELIC_POOL (4 reliques runiques pour boss final). Écran 'boss-relic-choice' intercalé entre la victoire boss et le hub (ou gameover pour le boss final). Effets appliqués : permanentMaxHpPercent, permanentMagicPercent, permanentPhysicalPercent, permanentAllStatsPercent, startingShieldBonus, combatGoldPercent, firstSkillFreeEachCombat, regenPerEnemyTurn, shieldOnLifeLost, reviveAllOnDefeatOnce. bonusFreeSwapsNextHub est cosmétique pour le moment. Lootbox gratuite post-boss non livrée (pas dans la liste majors stricte de la review).",
+    "acceptance": "Définir BOSS_RELIC_POOL (3-6 reliques typées RunRelic). createRewardOptions bascule sur ce pool quand wasBoss && !wasFinalBoss. Lootbox 'rare' gratuite empilée dans pendingLootbox automatiquement (à ouvrir avant le hub) ou ajoutée comme bonus de récompense.",
+    "severity": "major",
+    "fixes": "review.md Major-2 / brief §10 / specs §4.9"
+  },
+  {
+    "id": "T32",
+    "title": "Réparer test-actions/start-combat.json pour le nouveau flux team→stage-intro→combat",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T28"],
+    "status": "done",
+    "note": "start-combat.json, reward-next.json, reward-special.json, abandon.json et chest.json mis à jour pour intercaler le clic #stage-intro-enter. Format hybride : on garde mouse_x/mouse_y pour rétro-compat runner et on ajoute selector pour les nouveaux click points.",
+    "acceptance": "Soit ajouter une étape #stage-intro-enter dans start-combat.json, soit créer start-combat-v2.json avec la séquence complète. Vérifier compat runner Playwright avec schéma mixte mouse_x/y vs selector.",
+    "severity": "major",
+    "fixes": "review.md Major-3"
+  },
+  {
+    "id": "T33",
+    "title": "Brancher l'effet 'Couronne fissurée' (nextFightBossDamageBonus) dans advanceCombat / damage calc",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T12"],
+    "status": "done",
+    "note": "Multiplicateur appliqué dans advanceCombat (basic damage) et useSpecial (special attack) quand enemy.boss.",
+    "acceptance": "La relique nextFightBossDamageBonus est lue lors d'une attaque contre un ennemi boss et applique le multiplicateur. Sinon l'item shop stage 3 est cosmétique.",
+    "severity": "minor",
+    "fixes": "review.md Minor-2"
+  },
+  {
+    "id": "T34",
+    "title": "Vérifier que RunProgress tient en 1280×720 sans débordement (flex-wrap ou step compact)",
+    "owner_role": "ui-designer",
+    "depends_on": ["T6"],
+    "status": "pending",
+    "acceptance": "Capture visuelle du combat en 1280x720 montre les 32 cases sur une ligne ou un wrap propre. Pas de scroll horizontal.",
+    "severity": "minor",
+    "fixes": "review.md Risques-2"
+  },
+  {
+    "id": "T35",
+    "title": "Lootbox runique : drop automatique post-boss final ou indication explicite 'Drop boss uniquement'",
+    "owner_role": "frontend-dev",
+    "depends_on": ["T15"],
+    "status": "pending",
+    "acceptance": "Soit OPEN_CHEST tier='runic' déclenche un rollLootbox('runic') en bonus, soit la carte runic dans LootboxTab affiche 'Récompense de fin avancée' au lieu d'un placeholder muet.",
+    "severity": "minor",
+    "fixes": "review.md Minor-1 / brief §6"
+  }
+]

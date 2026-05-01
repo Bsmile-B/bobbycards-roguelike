@@ -1,0 +1,23 @@
+{
+  "description": "Bascule la vitesse de combat sur x1.5 puis revient sur x1. V3-T3 — vérifie que le sélecteur est exposé sur l'écran combat avec ids #speed-1, #speed-1-25, #speed-1-5.",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#speed-1-5"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#speed-1"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    }
+  ]
+}

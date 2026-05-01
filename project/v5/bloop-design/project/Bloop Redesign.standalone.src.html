@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bloop — Redesign</title>
+<template id="__bundler_thumbnail" data-bg-color="#0A0B10">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#FF6A00" stop-opacity="0.55"/>
+        <stop offset="60%" stop-color="#006CFF" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#0A0B10" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="800" fill="#0A0B10"/>
+    <rect width="1200" height="800" fill="url(#bg)"/>
+    <circle cx="600" cy="380" r="140" fill="#FF6A00"/>
+    <circle cx="520" cy="340" r="40" fill="#fff" fill-opacity="0.5"/>
+    <text x="600" y="600" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="120" fill="#fff" letter-spacing="-4">bloop<tspan fill="#FF6A00">.</tspan></text>
+  </svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #050608; font-family: 'Geist', -apple-system, system-ui, sans-serif; color: #fff; overflow-x: hidden; }
+  body { min-height: 100vh; }
+  button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  .noscroll::-webkit-scrollbar { display: none; }
+  em { font-style: italic; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components/bloop-tokens.jsx"></script>
+<script type="text/babel" src="components/bloop-icons.jsx"></script>
+<script type="text/babel" src="components/bloop-data.jsx"></script>
+<script type="text/babel" src="components/bloop-ui.jsx"></script>
+<script type="text/babel" src="components/screen-home.jsx"></script>
+<script type="text/babel" src="components/screen-discover.jsx"></script>
+<script type="text/babel" src="components/screen-social.jsx"></script>
+<script type="text/babel" src="components/screen-create.jsx"></script>
+
+<script type="text/babel">
+const { BloopTokens: T, BloopIcons: I, BloopNav, StatusBar, HomeScreen, DiscoverScreen, SocialScreen, ProfileScreen, MyEventsScreen, EventDetailScreen, CreateScreen, AuthScreen, BloopGoo } = window;
+
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "cardVariant": "embossed",
+  "accent": "blue",
+  "showCanvas": true
+}/*EDITMODE-END*/;
+
+// iPhone frame shell
+function Phone({ children, label, width = 390, height = 830 }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <div style={{
+        width, height, borderRadius: 52, padding: 8,
+        background: '#0A0A0A',
+        boxShadow: '0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.07), inset 0 0 0 2px #1a1a1e',
+      }}>
+        <div style={{
+          width: '100%', height: '100%', borderRadius: 44, overflow: 'hidden',
+          position: 'relative', background: T.ink0,
+        }}>
+          {/* dynamic island */}
+          <div style={{
+            position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)',
+            width: 110, height: 32, borderRadius: 20, background: '#000', zIndex: 100,
+          }}/>
+          <StatusBar dark/>
+          <div style={{ width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }} className="noscroll">
+            {children}
+          </div>
+        </div>
+      </div>
+      {label && <div style={{ fontFamily: T.fontMono, fontSize: 11, color: 'rgba(255,255,255,0.48)', letterSpacing: 1, textTransform: 'uppercase' }}>{label}</div>}
+    </div>
+  );
+}
+
+function App() {
+  const [tweaks, setTweaks] = React.useState(TWEAKS);
+  const [screen, setScreen] = React.useState(() => localStorage.getItem('bloop-screen') || 'home');
+  const [tweaksOpen, setTweaksOpen] = React.useState(false);
+  const [editMode, setEditMode] = React.useState(false);
+
+  React.useEffect(() => { localStorage.setItem('bloop-screen', screen); }, [screen]);
+
+  // edit mode protocol
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') { setEditMode(true); setTweaksOpen(true); }
+      if (e.data?.type === '__deactivate_edit_mode') { setEditMode(false); setTweaksOpen(false); }
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const updateTweak = (key, val) => {
+    const next = { ...tweaks, [key]: val };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  };
+
+  const renderScreen = (s) => {
+    const p = { cardVariant: tweaks.cardVariant, setScreen };
+    if (s === 'home') return <HomeScreen {...p}/>;
+    if (s === 'discover') return <DiscoverScreen {...p}/>;
+    if (s === 'social') return <SocialScreen {...p}/>;
+    if (s === 'profile') return <ProfileScreen {...p}/>;
+    if (s === 'myevents') return <MyEventsScreen {...p}/>;
+    if (s === 'event') return <EventDetailScreen {...p}/>;
+    if (s === 'create') return <CreateScreen {...p}/>;
+    if (s === 'auth') return <AuthScreen {...p}/>;
+    return <HomeScreen {...p}/>;
+  };
+
+  const showNav = !['event', 'create', 'auth'].includes(screen);
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#050608', position: 'relative', padding: '40px 20px 60px' }}>
+      {/* ambient background goo */}
+      <div style={{ position: 'fixed', inset: 0, opacity: 0.25, pointerEvents: 'none', filter: 'blur(60px)' }}>
+        <BloopGoo colors={[T.blue, T.orange]}/>
+      </div>
+
+      <Header screen={screen} setScreen={setScreen}/>
+
+      {/* Main stage — interactive prototype */}
+      <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: 20, gap: 60, zIndex: 2 }}>
+        <SideNav screen={screen} setScreen={setScreen}/>
+        <div style={{ position: 'relative' }}>
+          <Phone>
+            {renderScreen(screen)}
+            {showNav && <BloopNav active={
+              screen === 'home' ? 'home' : screen === 'discover' ? 'discover' :
+              screen === 'social' ? 'social' : screen === 'profile' ? 'profile' :
+              screen === 'myevents' ? 'myevents' : 'home'
+            } onChange={(t) => {
+              if (t === 'create') setScreen('create');
+              else if (t === 'home') setScreen('home');
+              else if (t === 'discover') setScreen('discover');
+              else if (t === 'social') setScreen('social');
+              else if (t === 'profile') setScreen('profile');
+            }}/>}
+          </Phone>
+        </div>
+        <CaptionPanel screen={screen}/>
+      </div>
+
+      {/* Canvas récap */}
+      {tweaks.showCanvas && <CanvasRecap cardVariant={tweaks.cardVariant}/>}
+
+      {/* tweaks panel */}
+      {editMode && tweaksOpen && <TweaksPanel tweaks={tweaks} update={updateTweak} close={() => setTweaksOpen(false)}/>}
+    </div>
+  );
+}
+
+function Header({ screen, setScreen }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 3, maxWidth: 1400, margin: '0 auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ position: 'relative', width: 44, height: 44 }}>
+          <svg width="44" height="44" viewBox="-50 -50 100 100">
+            <circle r="28" fill={T.orange}>
+              <animate attributeName="r" values="28;32;28" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="-10" cy="-8" r="8" fill="#fff" opacity="0.5"/>
+          </svg>
+        </div>
+        <div>
+          <div style={{ fontFamily: T.fontDisplay, fontSize: 30, color: '#fff', letterSpacing: -1, lineHeight: 1 }}>bloop<em style={{ color: T.orange }}>.</em></div>
+          <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.48)', letterSpacing: 1.5, textTransform: 'uppercase', marginTop: 2 }}>Redesign · v2 · Apr 2026</div>
+        </div>
+      </div>
+      <div style={{ fontFamily: T.fontSans, fontSize: 13, color: 'rgba(255,255,255,0.48)' }}>
+        Clique sur la nav ou les cartes pour explorer le proto.
+      </div>
+    </div>
+  );
+}
+
+function SideNav({ screen, setScreen }) {
+  const items = [
+    ['auth', 'Onboarding', '01'],
+    ['home', 'Accueil', '02'],
+    ['discover', 'Découvrir', '03'],
+    ['event', 'Event', '04'],
+    ['create', 'Créer', '05'],
+    ['myevents', 'Agenda', '06'],
+    ['social', 'Social', '07'],
+    ['profile', 'Profil', '08'],
+  ];
+  return (
+    <div style={{ width: 200, paddingTop: 40 }}>
+      <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Écrans</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {items.map(([id, label, num]) => {
+          const active = screen === id;
+          return (
+            <button key={id} onClick={() => setScreen(id)} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 14px', borderRadius: 12, border: 'none', cursor: 'pointer',
+              background: active ? 'rgba(255,106,0,0.1)' : 'transparent',
+              color: active ? T.orange : 'rgba(255,255,255,0.6)',
+              fontFamily: T.fontSans, fontSize: 14, fontWeight: 500,
+              textAlign: 'left', width: '100%',
+              borderLeft: active ? `2px solid ${T.orange}` : '2px solid transparent',
+              transition: 'all 0.2s',
+            }}>
+              <span style={{ fontFamily: T.fontMono, fontSize: 10, opacity: 0.5 }}>{num}</span>
+              <span>{label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CaptionPanel({ screen }) {
+  const info = {
+    home: { title: 'Accueil', desc: 'Salut chaleureux avec streak XP animé, signature goo en fond, events près de vous triés par proximité, et feed social des potes.' },
+    discover: { title: 'Découvrir', desc: 'Toggle liste/carte, catégories en grille colorée, carte stylisée avec pins animés + halo de position.' },
+    event: { title: 'Détail événement', desc: 'Hero en couleur de la catégorie, countdown éditorial, bloc organisateur certifié, CTA sticky orange.' },
+    create: { title: 'Créer · wizard', desc: '3 étapes (Quoi, Quand, Qui). Catégories tactiles, créneaux rapides, toggle public/privé.' },
+    myevents: { title: 'Mon agenda', desc: 'Timeline groupée par jour, badge LIVE pour aujourd\'hui, empty state invitant à créer.' },
+    social: { title: 'Social', desc: 'Stories des potes en haut (cercle gradient), conversations, ajout par QR code.' },
+    profile: { title: 'Profil', desc: 'Cover goo animée, stats en 4 colonnes, badges gamifiés, vibes en chips.' },
+    auth: { title: 'Onboarding', desc: 'Écran hero avec la baseline "On se capte.", goo Bloop signature fullbleed.' },
+  }[screen] || { title: '', desc: '' };
+  return (
+    <div style={{ width: 280, paddingTop: 40 }}>
+      <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>Écran courant</div>
+      <div style={{ fontFamily: T.fontDisplay, fontSize: 32, color: '#fff', letterSpacing: -0.8, lineHeight: 1, marginBottom: 10 }}>{info.title}</div>
+      <div style={{ fontFamily: T.fontSans, fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>{info.desc}</div>
+
+      <div style={{ marginTop: 30, padding: 16, borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 10 }}>Design system</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {[
+            ['#006CFF','Bleu Bloop'],
+            ['#FF6A00','Orange Bloop'],
+            ['#0A0B10','Ink'],
+            ['#FFFFFF','Paper'],
+          ].map(([c, n]) => (
+            <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 16, height: 16, borderRadius: 5, background: c, border: '1px solid rgba(255,255,255,0.1)' }}/>
+              <span style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>{n}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ fontFamily: T.fontDisplay, fontSize: 18, color: '#fff' }}>Instrument <em>Serif</em></div>
+          <div style={{ fontFamily: T.fontSans, fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>Geist · UI sans-serif</div>
+          <div style={{ fontFamily: T.fontMono, fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>JetBrains Mono · data</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CanvasRecap({ cardVariant }) {
+  const screens = [
+    { id: 'auth', label: '01 · Onboarding' },
+    { id: 'home', label: '02 · Accueil' },
+    { id: 'discover', label: '03 · Découvrir' },
+    { id: 'event', label: '04 · Event' },
+    { id: 'create', label: '05 · Créer' },
+    { id: 'myevents', label: '06 · Agenda' },
+    { id: 'social', label: '07 · Social' },
+    { id: 'profile', label: '08 · Profil' },
+  ];
+  return (
+    <div style={{ maxWidth: 1400, margin: '120px auto 40px', position: 'relative', zIndex: 2 }}>
+      <div style={{ textAlign: 'center', marginBottom: 50 }}>
+        <div style={{ fontFamily: T.fontMono, fontSize: 11, color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 10 }}>All screens</div>
+        <div style={{ fontFamily: T.fontDisplay, fontSize: 72, color: '#fff', letterSpacing: -2, lineHeight: 1 }}>
+          Le <em style={{ color: T.orange }}>canvas</em> complet.
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 40, justifyItems: 'center' }}>
+        {screens.map(s => (
+          <div key={s.id} style={{ transform: 'scale(0.82)', transformOrigin: 'top center', height: 700 }}>
+            <Phone label={s.label} width={360} height={780}>
+              <CanvasScreenRender id={s.id} cardVariant={cardVariant}/>
+            </Phone>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CanvasScreenRender({ id, cardVariant }) {
+  const p = { cardVariant, setScreen: () => {} };
+  const showNav = !['event', 'create', 'auth'].includes(id);
+  return (
+    <>
+      {id === 'home' && <HomeScreen {...p}/>}
+      {id === 'discover' && <DiscoverScreen {...p}/>}
+      {id === 'social' && <SocialScreen {...p}/>}
+      {id === 'profile' && <ProfileScreen {...p}/>}
+      {id === 'myevents' && <MyEventsScreen {...p}/>}
+      {id === 'event' && <EventDetailScreen {...p}/>}
+      {id === 'create' && <CreateScreen {...p}/>}
+      {id === 'auth' && <AuthScreen {...p}/>}
+      {showNav && <BloopNav active={id} onChange={() => {}}/>}
+    </>
+  );
+}
+
+function TweaksPanel({ tweaks, update, close }) {
+  return (
+    <div style={{
+      position: 'fixed', bottom: 20, right: 20, width: 320, zIndex: 1000,
+      background: 'rgba(15,17,24,0.96)', backdropFilter: 'blur(24px)',
+      border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20,
+      padding: 18, boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <div style={{ fontFamily: T.fontDisplay, fontSize: 22, color: '#fff', letterSpacing: -0.5 }}>Tweaks</div>
+        <button onClick={close} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(255,255,255,0.06)', border: 'none', color: '#fff', cursor: 'pointer' }}>✕</button>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Style des cartes</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['flat','glass','embossed'].map(v => (
+            <button key={v} onClick={() => update('cardVariant', v)} style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
+              background: tweaks.cardVariant === v ? T.orange : 'rgba(255,255,255,0.06)',
+              color: tweaks.cardVariant === v ? '#fff' : 'rgba(255,255,255,0.7)',
+              fontFamily: T.fontSans, fontWeight: 600, fontSize: 12, textTransform: 'capitalize',
+            }}>{v}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontFamily: T.fontMono, fontSize: 10, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Accent principal</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[['orange','#FF6A00'],['blue','#006CFF'],['violet','#B65CFF']].map(([k, c]) => (
+            <button key={k} onClick={() => update('accent', k)} style={{
+              flex: 1, padding: '10px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
+              background: tweaks.accent === k ? c : 'rgba(255,255,255,0.06)',
+              color: '#fff', fontFamily: T.fontSans, fontWeight: 600, fontSize: 12, textTransform: 'capitalize',
+            }}>{k}</button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+          <span style={{ fontFamily: T.fontSans, fontSize: 13, color: '#fff' }}>Canvas récap visible</span>
+          <input type="checkbox" checked={tweaks.showCanvas} onChange={e => update('showCanvas', e.target.checked)}/>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

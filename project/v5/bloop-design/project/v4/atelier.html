@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BI · Atelier — table de travail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/>
+<style>
+  /* atelier-specific */
+  .at-wrap{padding:120px clamp(22px,4vw,64px) 140px}
+  .at-head{max-width:920px;margin-bottom:60px}
+  .at-head h1{margin-top:14px}
+  .at-head p{margin-top:20px}
+  .at-back{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--bi-glow);text-transform:uppercase;margin-bottom:40px;transition:color .3s}
+  .at-back:hover{color:var(--bi-warm)}
+
+  /* draggable cards layout */
+  .at-table{position:relative;min-height:1600px;border:1px dashed var(--bi-line);background:
+    linear-gradient(rgba(109,182,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+    linear-gradient(90deg,rgba(109,182,255,.035) 1px,transparent 1px) 0 0/40px 40px;
+    margin-top:30px;overflow:hidden}
+  .at-note{position:absolute;background:var(--bi-panel);border:1px solid var(--bi-line);padding:20px;cursor:grab;user-select:none;transition:box-shadow .3s,border-color .3s;min-width:260px;max-width:360px}
+  .at-note:hover{border-color:rgba(47,128,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(47,128,255,.3)}
+  .at-note.dragging{cursor:grabbing;z-index:50;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px var(--bi-electric)}
+  .at-note-head{display:flex;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--bi-line)}
+  .at-note-kind{font-family:var(--f-mono);font-size:10px;letter-spacing:.2em;color:var(--bi-glow);text-transform:uppercase}
+  .at-note-num{font-family:var(--f-mono);font-size:10px;color:var(--bi-dim);letter-spacing:.2em}
+  .at-note h3{font-family:var(--f-display);font-size:22px;margin:0 0 10px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.02}
+  .at-note p{font-size:13px;line-height:1.55;color:var(--bi-dim);margin:0}
+  .at-note .at-status{margin-top:14px;padding-top:10px;border-top:1px dashed var(--bi-line);font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;display:flex;justify-content:space-between;color:var(--bi-dim)}
+  .at-note .at-status b{color:var(--bi-warm)}
+  .at-note.tilt-l{transform:rotate(-1.5deg)}
+  .at-note.tilt-r{transform:rotate(1.5deg)}
+  .at-note.tilt-rr{transform:rotate(2.5deg)}
+
+  /* special note types */
+  .at-note.swatches{min-width:280px}
+  .at-swatch-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+  .at-swatch{aspect-ratio:1;border:1px solid var(--bi-line);position:relative}
+  .at-swatch span{position:absolute;bottom:4px;left:4px;font-family:var(--f-mono);font-size:8px;color:#fff;mix-blend-mode:difference;letter-spacing:.08em}
+
+  .at-note.type{min-width:300px}
+  .at-type-spec{font-family:var(--f-display);font-size:52px;line-height:.9;letter-spacing:-.02em;margin:12px 0 4px}
+  .at-type-info{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--bi-dim);text-transform:uppercase;display:flex;justify-content:space-between;margin-top:10px}
+
+  .at-note.code{font-family:var(--f-mono);background:#070c18}
+  .at-note.code pre{font-family:var(--f-mono);font-size:11px;line-height:1.5;color:var(--bi-dim);margin:10px 0 0;white-space:pre-wrap}
+  .at-note.code .tk-k{color:var(--bi-glow)}
+  .at-note.code .tk-s{color:var(--bi-warm)}
+  .at-note.code .tk-c{color:#556}
+
+  .at-note.schema svg{width:100%;height:auto;margin-top:6px}
+
+  .at-note.polaroid{padding:14px 14px 40px;background:#0e1830;box-shadow:0 15px 40px rgba(0,0,0,.5)}
+  .at-note.polaroid .at-polaroid-img{aspect-ratio:1;background:linear-gradient(135deg,#0b1734,#040814);border:1px solid var(--bi-line);display:grid;place-items:center;position:relative;overflow:hidden}
+  .at-note.polaroid .at-polaroid-img::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(109,182,255,.06) 10px 11px)}
+  .at-note.polaroid .at-polaroid-img span{position:relative;font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--bi-glow);text-transform:uppercase}
+  .at-note.polaroid .at-polaroid-cap{margin-top:12px;font-family:var(--f-mono);font-size:11px;text-align:center;color:var(--bi-paper);text-transform:uppercase;letter-spacing:.15em}
+
+  /* instructions ribbon */
+  .at-hint{position:sticky;top:70px;z-index:40;display:inline-block;background:rgba(47,128,255,.12);border:1px solid rgba(47,128,255,.4);padding:10px 16px;font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--bi-glow);text-transform:uppercase;margin-bottom:10px;backdrop-filter:blur(8px)}
+  .at-hint b{color:var(--bi-warm)}
+
+  /* reset btn */
+  .at-reset{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:10px 14px;border:1px solid var(--bi-line);background:transparent;font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--bi-dim);text-transform:uppercase;cursor:pointer;transition:all .3s}
+  .at-reset:hover{border-color:var(--bi-glow);color:var(--bi-glow)}
+
+  /* scribble overlay */
+  .at-scribble{position:absolute;inset:0;pointer-events:none}
+  .at-scribble svg{width:100%;height:100%}
+  .at-scribble .scribble-path{stroke:rgba(109,182,255,.25);stroke-width:1;fill:none;stroke-dasharray:4 6}
+</style>
+</head>
+<body>
+
+<!-- background -->
+<div class="bi-bg"><canvas id="bgCanvas"></canvas></div>
+<div class="bi-grain"></div>
+
+<div class="topbar">
+  <span>BI · <b>atelier</b> · table de travail</span>
+  <span><a href="Bobby Industries.html">← retour</a></span>
+</div>
+
+<main class="at-wrap">
+  <div class="shell">
+    <a href="Bobby Industries.html" class="at-back" data-hover>← retour à l'accueil</a>
+    <div class="at-head">
+      <span class="eyebrow">// atelier · état au <b style="color:var(--bi-paper)">19 mars 2026</b></span>
+      <h1 class="h-xl">Ma table,<br/>en ce moment.</h1>
+      <p class="lead">Ce que je travaille cette semaine. Idées à moitié cuites, essais, ratés, couleurs testées, bouts de code. <b>Tout est attrapable</b> — tu peux déplacer chaque carte, réorganiser ma table. Ça ne change rien pour moi. Peut-être que ça t'en apprendra.</p>
+      <div style="margin-top:20px">
+        <span class="at-hint">attrape · déplace · laisse ton bordel · <b>tout tient en mémoire</b></span>
+        <button class="at-reset" id="atReset">↺ tout ranger</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="at-table" id="atTable">
+      <!-- draggable notes -->
+      <div class="at-note tilt-l" data-x="40" data-y="30" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// brief</span><span class="at-note-num">#01</span></div>
+        <h3>Coyotes v2 — maillot domicile</h3>
+        <p>Refaire le maillot avec une typo plus grasse. Laisser les chiffres respirer. Pas de nom dans le dos — on se reconnaît à la silhouette.</p>
+        <div class="at-status"><span>statut</span><b>en cours</b></div>
+      </div>
+
+      <div class="at-note swatches tilt-r" data-x="400" data-y="60" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// palette</span><span class="at-note-num">#02</span></div>
+        <h3>BI 2026 — couleurs</h3>
+        <p>Palette actuelle. L'électrique tient tout. Le chaud sert d'alerte.</p>
+        <div class="at-swatch-row">
+          <div class="at-swatch" style="background:#040814"><span>ink</span></div>
+          <div class="at-swatch" style="background:#2f80ff"><span>elec</span></div>
+          <div class="at-swatch" style="background:#6db6ff"><span>glow</span></div>
+          <div class="at-swatch" style="background:#ffd486"><span>warm</span></div>
+          <div class="at-swatch" style="background:#f4f7ff"><span>pap</span></div>
+        </div>
+      </div>
+
+      <div class="at-note type" data-x="760" data-y="30" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// type test</span><span class="at-note-num">#03</span></div>
+        <h3>drg_music — titre disque 06</h3>
+        <div class="at-type-spec">CONTRE-<br/>JOUR</div>
+        <div class="at-type-info"><span>archivo black · -2%</span><span>essai 03/07</span></div>
+      </div>
+
+      <div class="at-note polaroid tilt-l" data-x="80" data-y="260" data-hover>
+        <div class="at-polaroid-img"><span>photo test · 03</span></div>
+        <div class="at-polaroid-cap">coyotes · jump test</div>
+      </div>
+
+      <div class="at-note code tilt-r" data-x="400" data-y="320" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// code</span><span class="at-note-num">#04</span></div>
+        <h3 style="color:var(--bi-glow)">bg.js</h3>
+<pre><span class="tk-c">// constellation</span>
+<span class="tk-k">for</span>(<span class="tk-k">let</span> n <span class="tk-k">of</span> nodes){
+  n.x += n.vx;
+  n.y += n.vy;
+  <span class="tk-k">if</span>(dist &lt; <span class="tk-s">200</span>){
+    attract(n, mouse);
+  }
+}</pre>
+      </div>
+
+      <div class="at-note tilt-rr" data-x="760" data-y="340" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// note</span><span class="at-note-num">#05</span></div>
+        <h3>Idée — site du label</h3>
+        <p>Chaque disque = une pochette qui s'ouvre. Tu entends 6 secondes. Tu décides si tu veux plus. Tester en avril.</p>
+        <div class="at-status"><span>statut</span><b>à faire</b></div>
+      </div>
+
+      <div class="at-note schema" data-x="60" data-y="580" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// schéma</span><span class="at-note-num">#06</span></div>
+        <h3>Comment ça tient</h3>
+        <svg viewBox="0 0 280 180">
+          <circle cx="140" cy="90" r="30" fill="none" stroke="#6db6ff" stroke-width="1.2"/>
+          <text x="140" y="94" text-anchor="middle" fill="#f4f7ff" font-family="Archivo Black" font-size="12">BI</text>
+          <g stroke="#2f80ff" stroke-width="1" stroke-dasharray="3 3" fill="none">
+            <line x1="60" y1="30" x2="125" y2="70"/>
+            <line x1="220" y1="30" x2="155" y2="70"/>
+            <line x1="140" y1="160" x2="140" y2="120"/>
+          </g>
+          <circle cx="55" cy="28" r="18" fill="#0e1830" stroke="#6db6ff" stroke-width="1"/>
+          <text x="55" y="32" text-anchor="middle" fill="#6db6ff" font-family="JetBrains Mono" font-size="9">drg</text>
+          <circle cx="225" cy="28" r="18" fill="#0e1830" stroke="#6db6ff" stroke-width="1"/>
+          <text x="225" y="32" text-anchor="middle" fill="#6db6ff" font-family="JetBrains Mono" font-size="9">coy</text>
+          <circle cx="140" cy="165" r="18" fill="#0e1830" stroke="#6db6ff" stroke-width="1"/>
+          <text x="140" y="169" text-anchor="middle" fill="#6db6ff" font-family="JetBrains Mono" font-size="9">atl</text>
+        </svg>
+      </div>
+
+      <div class="at-note tilt-l" data-x="420" data-y="640" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// lu</span><span class="at-note-num">#07</span></div>
+        <h3>Ce que je lis</h3>
+        <p>«&nbsp;Trois essais de physiologie du goût&nbsp;» — Brillat-Savarin. Pas pour la bouffe. Pour apprendre à décrire ce qui plaît sans le démonter.</p>
+        <div class="at-status"><span>en cours</span><b>p. 48</b></div>
+      </div>
+
+      <div class="at-note polaroid tilt-r" data-x="770" data-y="660" data-hover>
+        <div class="at-polaroid-img"><span>essai · typo</span></div>
+        <div class="at-polaroid-cap">drg_06 · jeu d'ombre</div>
+      </div>
+
+      <div class="at-note tilt-rr" data-x="100" data-y="880" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// todo</span><span class="at-note-num">#08</span></div>
+        <h3>Cette semaine</h3>
+        <p>— <b>lundi</b> : finir pochette drg_06<br/>— <b>mardi</b> : maillot coy v2<br/>— <b>mer</b> : shooting Coyotes<br/>— <b>jeu</b> : site label (code)<br/>— <b>ven</b> : rangement atelier</p>
+      </div>
+
+      <div class="at-note swatches tilt-l" data-x="440" data-y="920" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// palette</span><span class="at-note-num">#09</span></div>
+        <h3>Coyotes — version extérieur</h3>
+        <p>Plus sombre, plus chaud. Ça doit se lire sous la lumière de parquet.</p>
+        <div class="at-swatch-row">
+          <div class="at-swatch" style="background:#1a0f05"><span>ember</span></div>
+          <div class="at-swatch" style="background:#b8471c"><span>ochre</span></div>
+          <div class="at-swatch" style="background:#f4a548"><span>sun</span></div>
+          <div class="at-swatch" style="background:#2a1a0a"><span>dusk</span></div>
+          <div class="at-swatch" style="background:#e8ddc2"><span>bone</span></div>
+        </div>
+      </div>
+
+      <div class="at-note tilt-r" data-x="780" data-y="960" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// demande</span><span class="at-note-num">#10</span></div>
+        <h3>Commande reçue</h3>
+        <p>Un libraire de Belleville veut refaire son identité. Petit budget, grand cœur. Je dis <b class="text-glow">oui</b>. Premier rdv le 24.</p>
+        <div class="at-status"><span>réponse</span><b>oui</b></div>
+      </div>
+
+      <div class="at-note tilt-l" data-x="180" data-y="1180" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// citation</span><span class="at-note-num">#11</span></div>
+        <h3 style="font-size:18px;color:var(--bi-warm)">« Fais-le, avant de savoir si tu peux. »</h3>
+        <p style="margin-top:10px">— scotchée au-dessus de mon écran depuis 2023. Ne bouge pas.</p>
+      </div>
+
+      <div class="at-note code tilt-rr" data-x="560" data-y="1220" data-hover>
+        <div class="at-note-head"><span class="at-note-kind">// todo code</span><span class="at-note-num">#12</span></div>
+        <h3 style="color:var(--bi-glow)">site-label.todo</h3>
+<pre><span class="tk-c">- audio preview API</span>
+<span class="tk-c">- fallback iOS</span>
+<span class="tk-c">- pochette 3D sleeve</span>
+<span class="tk-c">- cart → bandcamp</span>
+<span class="tk-k">deadline:</span> <span class="tk-s">"15 avril"</span></pre>
+      </div>
+
+      <!-- scribble overlay -->
+      <div class="at-scribble">
+        <svg viewBox="0 0 1280 1600" preserveAspectRatio="none">
+          <path class="scribble-path" d="M180,120 Q 280,180 440,160 T 760,140"/>
+          <path class="scribble-path" d="M420,380 C 500,500 700,480 820,500"/>
+          <path class="scribble-path" d="M200,700 Q 400,780 600,720 T 900,780"/>
+          <path class="scribble-path" d="M600,1100 L 900,1200"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell" style="margin-top:80px">
+    <div style="padding:30px 0;border-top:1px solid var(--bi-line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+      <div>
+        <span class="eyebrow">// tu veux me confier quelque chose ?</span>
+        <p class="body" style="margin-top:10px">Je prends peu de commandes, mais je réponds à tout.</p>
+      </div>
+      <a href="mailto:bobby@industries.fr" class="btn primary" data-hover>bobby@industries.fr →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div>© 2026 Bobby Industries</div>
+  <span>atelier · table de travail</span>
+  <div style="text-align:right"><a href="Bobby Industries.html">accueil →</a></div>
+</footer>
+
+<script src="core.js"></script>
+<script>
+(function(){
+  window.BI_initConstellation(document.getElementById("bgCanvas"));
+  window.BI_initCursor();
+
+  // apply initial positions from data-x/data-y + load from storage
+  const notes = Array.from(document.querySelectorAll(".at-note"));
+  const STORAGE = "bi-atelier-v4";
+  const saved = JSON.parse(localStorage.getItem(STORAGE) || "{}");
+
+  notes.forEach((n,i)=>{
+    n.dataset.id = "n"+i;
+    const s = saved[n.dataset.id];
+    const x = s?.x ?? parseFloat(n.dataset.x);
+    const y = s?.y ?? parseFloat(n.dataset.y);
+    n.style.left = x+"px";
+    n.style.top = y+"px";
+  });
+
+  function save(){
+    const out = {};
+    notes.forEach(n=> out[n.dataset.id] = {x:parseFloat(n.style.left), y:parseFloat(n.style.top)});
+    localStorage.setItem(STORAGE, JSON.stringify(out));
+  }
+
+  // drag
+  let drag = null;
+  notes.forEach(n=>{
+    n.addEventListener("pointerdown", e=>{
+      if (e.target.closest("a,button")) return;
+      const r = n.getBoundingClientRect();
+      const tableR = document.getElementById("atTable").getBoundingClientRect();
+      drag = { el:n, dx:e.clientX - r.left, dy:e.clientY - r.top, tableR };
+      n.classList.add("dragging");
+      n.setPointerCapture(e.pointerId);
+      // bring to front
+      notes.forEach(o=>o.style.zIndex = "");
+      n.style.zIndex = "60";
+    });
+    n.addEventListener("pointermove", e=>{
+      if (!drag || drag.el!==n) return;
+      const tableR = document.getElementById("atTable").getBoundingClientRect();
+      const x = e.clientX - tableR.left - drag.dx;
+      const y = e.clientY - tableR.top - drag.dy;
+      n.style.left = Math.max(0, Math.min(tableR.width-60, x))+"px";
+      n.style.top = Math.max(0, y)+"px";
+    });
+    n.addEventListener("pointerup", e=>{
+      if (drag && drag.el===n){ n.classList.remove("dragging"); drag=null; save(); }
+    });
+    n.addEventListener("pointercancel", e=>{
+      if (drag && drag.el===n){ n.classList.remove("dragging"); drag=null; save(); }
+    });
+  });
+
+  document.getElementById("atReset").addEventListener("click", ()=>{
+    localStorage.removeItem(STORAGE);
+    notes.forEach(n=>{
+      n.style.left = parseFloat(n.dataset.x)+"px";
+      n.style.top = parseFloat(n.dataset.y)+"px";
+    });
+  });
+
+  // clock in topbar if any
+})();
+</script>
+</body>
+</html>

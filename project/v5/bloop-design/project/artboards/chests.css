@@ -1,0 +1,254 @@
+/* ============================================================
+   ARTBOARD 3 — Coffres + Loot box
+   ============================================================ */
+.ab-chests {
+  width: 1280px;
+  padding: 36px 40px 44px;
+  background:
+    radial-gradient(circle at 50% 30%, #ffd6a0 0%, transparent 50%),
+    linear-gradient(180deg, #ffe4ba 0%, #ffc6a0 50%, #ff9b8a 100%);
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+.abc2-eyebrow { font-family: var(--font-display); font-size: 12px; letter-spacing: 2px; color: var(--ink-muted); }
+.abc2-title {
+  font-family: var(--font-display); font-size: 38px; margin: 4px 0 6px;
+  -webkit-text-stroke: 1.5px var(--ink); color: var(--brand-coral);
+  text-shadow: 0 4px 0 rgba(38,26,61,0.25);
+}
+.abc2-sub { margin: 0; max-width: 760px; color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+.abc2-h3 { font-family: var(--font-display); font-size: 18px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink); margin: 22px 0 14px; }
+
+/* Chest row */
+.chest-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.chest-cell { display: flex; flex-direction: column; align-items: center; padding: 16px 0; background: rgba(255,255,255,0.45); border: var(--stroke-thin); border-radius: var(--r-lg); box-shadow: var(--shadow-stick-sm); }
+
+.chest {
+  --ccolor: #c0894d; --cdeep: #6b5847; --cglow: #ffb938;
+  position: relative;
+  width: 150px; height: 150px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.chest-aura {
+  position: absolute; top: 30%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px; height: 80px;
+  background: radial-gradient(ellipse, var(--cglow) 0%, transparent 70%);
+  opacity: 0.6;
+  z-index: 0;
+}
+.chest--runic .chest-aura { animation: pulse-halo 3s ease-in-out infinite; }
+.chest--royal .chest-aura { animation: pulse-halo 4s ease-in-out infinite; }
+.chest--damaged .chest-aura { opacity: 0.2; }
+
+.chest-shadow {
+  position: absolute;
+  bottom: 26px; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 14px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.35), transparent 70%);
+  z-index: 0;
+}
+
+.chest-body {
+  position: relative;
+  width: 110px; height: 92px;
+  z-index: 1;
+  animation: float-y 4s ease-in-out infinite;
+}
+.chest--damaged .chest-body { animation: none; transform: rotate(-3deg); }
+
+.chest-lid {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 38px;
+  background: var(--ccolor);
+  border: 3px solid var(--ink);
+  border-radius: 14px 14px 4px 4px;
+  transform-origin: bottom center;
+  transition: transform 700ms cubic-bezier(.4,1.6,.5,1);
+}
+.chest.is-opening .chest-lid { transform: rotateX(-100deg) translateY(-4px); }
+
+.chest-lid-band-top {
+  position: absolute; top: 6px; left: -3px; right: -3px;
+  height: 8px;
+  background: var(--cdeep);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.chest-lid-keyhole {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  width: 14px; height: 14px;
+  background: var(--ink); border-radius: 50%;
+}
+.chest-lid-stud {
+  position: absolute; bottom: 4px; width: 8px; height: 8px;
+  background: #ffe9a0; border: 2px solid var(--ink); border-radius: 50%;
+}
+.chest-lid-stud--l { left: 6px; }
+.chest-lid-stud--r { right: 6px; }
+
+.chest-box {
+  position: absolute; top: 32px; left: 0; right: 0; bottom: 0;
+  background: var(--ccolor);
+  border: 3px solid var(--ink);
+  border-radius: 4px 4px 14px 14px;
+  overflow: hidden;
+}
+.chest-box-band {
+  position: absolute; bottom: 14px; left: -3px; right: -3px; height: 12px;
+  background: var(--cdeep);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.chest-box-lock {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 22px;
+  background: var(--cdeep);
+  border: 2.5px solid var(--ink);
+  border-radius: 4px;
+}
+
+.chest-rune {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: white;
+  text-shadow: 0 0 8px var(--cglow), 0 0 12px var(--cglow);
+  animation: pulse-halo 2.5s ease-in-out infinite;
+}
+.chest-rune--1 { top: 6px; left: 14px; animation-delay: 0s; }
+.chest-rune--2 { top: 22px; right: 12px; animation-delay: 0.4s; }
+.chest-rune--3 { bottom: 6px; left: 50%; transform: translateX(-50%); animation-delay: 0.8s; }
+
+.chest-burst {
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 100px;
+  background: radial-gradient(ellipse at 50% 100%, white 0%, var(--cglow) 30%, transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+  animation: chest-burst 1.2s ease-out;
+}
+@keyframes chest-burst {
+  0% { opacity: 0; transform: translateX(-50%) scaleY(0.4); }
+  40% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scaleY(2.4); }
+}
+
+.chest-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+  text-transform: uppercase;
+  margin-top: 14px;
+  background: white;
+  border: 2px solid var(--ink);
+  padding: 3px 12px;
+  border-radius: 999px;
+  box-shadow: 0 3px 0 rgba(38,26,61,0.35);
+}
+
+/* === Roulette === */
+.rou {
+  background: white;
+  border: var(--stroke);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-stick);
+}
+.rou-frame {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(180deg, #f4e4c1 0%, #fff5e1 100%);
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.rou-marker {
+  position: absolute;
+  top: -4px; bottom: -4px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  background: var(--brand-coral);
+  z-index: 4;
+  box-shadow: 0 0 0 3px white, 0 0 16px var(--brand-coral);
+}
+.rou-marker::before, .rou-marker::after {
+  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
+}
+.rou-marker::before { top: -8px; border-bottom: 10px solid var(--brand-coral); }
+.rou-marker::after  { bottom: -8px; border-top: 10px solid var(--brand-coral); }
+
+.rou-fade {
+  position: absolute; top: 0; bottom: 0; width: 80px; z-index: 3;
+  pointer-events: none;
+}
+.rou-fade--l { left: 0; background: linear-gradient(90deg, #f4e4c1 0%, transparent 100%); }
+.rou-fade--r { right: 0; background: linear-gradient(-90deg, #f4e4c1 0%, transparent 100%); }
+
+.rou-strip {
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  margin-left: -55px; /* center first item */
+  display: flex;
+  transition: transform 2700ms cubic-bezier(.12,.85,.25,1);
+}
+.rou-strip--idle { transition: none; transform: translateX(0) !important; }
+
+.rou-item {
+  width: 110px;
+  height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+.rou-item::before {
+  content: ''; position: absolute; inset: 8px;
+  border-radius: 12px;
+  border: 2.5px solid var(--ink);
+  background: white;
+  z-index: 0;
+}
+.rou-item--rare::before      { background: var(--rarity-rare-cream); border-color: var(--rarity-rare-deep); }
+.rou-item--epic::before      { background: var(--rarity-epic-cream); border-color: var(--rarity-epic-deep); }
+.rou-item--legendary::before { background: var(--rarity-legendary-cream); border-color: var(--rarity-legendary-deep); box-shadow: 0 0 18px var(--rarity-legendary); }
+.rou-item.is-winner::before  { animation: pulse-halo 0.8s ease-in-out infinite; }
+.rou-item > * { position: relative; z-index: 1; }
+
+.mini-portrait {
+  width: 56px; height: 56px;
+  border-radius: 12px;
+  border: 2px solid var(--ink);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 4px;
+}
+.mini-head { width: 36px; height: 36px; background: #ffe1c2; border-radius: 50%; border: 2px solid var(--ink); position: relative; }
+.mini-hat { position: absolute; top: -10px; left: -2px; right: -2px; height: 12px; border: 2px solid var(--ink); border-radius: 50% 50% 0 0; }
+.mini-eye { position: absolute; top: 12px; width: 5px; height: 6px; background: var(--ink); border-radius: 50%; }
+.mini-eye--l { left: 8px; }
+.mini-eye--r { right: 8px; }
+.mini-mouth { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 8px; height: 4px; border: 1.5px solid var(--ink); border-top: none; border-radius: 0 0 8px 8px; }
+
+.rou-item-name { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink); }
+
+.rou-status {
+  text-align: center;
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.rou-status--spin { color: var(--brand-grape); }
+.rou-status--done { color: var(--rarity-legendary-deep); text-shadow: 0 0 8px var(--rarity-legendary); }
+
+/* Notes */
+.abc2-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
+.abc2-note { background: white; border: var(--stroke); border-radius: var(--r-lg); padding: 16px 20px; box-shadow: var(--shadow-stick); }
+.abc2-note-h { font-family: var(--font-display); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; color: var(--brand-coral); }
+.abc2-note ol, .abc2-note ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.65; color: var(--ink-soft); }
+.abc2-note code { font-family: var(--font-mono); background: var(--paper); padding: 1px 5px; border-radius: 4px; font-size: 11px; }

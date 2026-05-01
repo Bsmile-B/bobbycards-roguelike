@@ -1,0 +1,552 @@
+/* ============================================================
+   src/styles/mascot.css
+   Extrait de styles.css (Phase 1 V5.1) — composant HeroMascot.
+   Importé via App.tsx. Ne pas dupliquer dans styles.css.
+   ============================================================ */
+
+/* ============================================================
+   V4 — HeroMascot — CSS pur, 100% sans SVG
+   Composant React : <HeroMascot variant size mood />
+   Dom rendu :
+     <div class="hero-mascot hero-mascot--{size} hero-mascot--mood-{mood}"
+          data-mascot-variant="{variant}">
+       <div class="hero-mascot__cape"></div>
+       <div class="hero-mascot__head">
+         <div class="hero-mascot__hat">
+           <div class="hero-mascot__hat-band"></div>
+           <div class="hero-mascot__hat-pom"></div>
+         </div>
+         <div class="hero-mascot__eyes">
+           <span class="hero-mascot__eye hero-mascot__eye--l"><span class="hero-mascot__pupil"/></span>
+           <span class="hero-mascot__eye hero-mascot__eye--r"><span class="hero-mascot__pupil"/></span>
+         </div>
+         <div class="hero-mascot__cheek hero-mascot__cheek--l"></div>
+         <div class="hero-mascot__cheek hero-mascot__cheek--r"></div>
+         <div class="hero-mascot__mouth"></div>
+         <div class="hero-mascot__accessory"></div>
+       </div>
+     </div>
+   ============================================================ */
+
+/* ----- Container + sizes (token --m est l'unité de scale, 1 = 80px) ----- */
+.hero-mascot {
+  --m: 80px;                       /* unité base — md */
+  --mascot-skin: #fff5e1;
+  --mascot-skin-shade: rgba(38, 26, 61, 0.10);
+  --mascot-hat: var(--brand-coral);
+  --mascot-hat-deep: #b3553f;
+  --mascot-hat-pom: var(--brand-sun);
+  --mascot-hat-shape: 50% 50% 0 0;
+  --mascot-hat-h: 0.45;            /* hauteur en multiplicateur de --m */
+  --mascot-hat-display: block;
+  --mascot-eye-bg: white;
+  --mascot-eye-border: var(--ink);
+  --mascot-pupil: var(--ink);
+  --mascot-pupil-x: 0px;
+  --mascot-cheek: #ff8b9c;
+  --mascot-cheek-opacity: 0.70;
+  --mascot-mouth: var(--ink);
+  --mascot-mouth-shape: 0 0 calc(var(--m) * 0.25) calc(var(--m) * 0.25);
+  --mascot-cape: var(--brand-grape);
+  --mascot-cape-display: block;
+  --mascot-accessory-display: none;
+  --mascot-accessory-content: '';
+
+  position: relative;
+  width: var(--m);
+  height: calc(var(--m) * 1.30);
+  flex-shrink: 0;
+  display: inline-block;
+  /* Float-y idle (cap GPU OK : translate-only) */
+  animation: float-y 3s ease-in-out infinite;
+}
+.hero-mascot--xs { --m: 36px; }
+.hero-mascot--sm { --m: 50px; }
+.hero-mascot--md { --m: 80px; }
+.hero-mascot--lg { --m: 140px; }
+.hero-mascot--xl { --m: 200px; }
+
+/* ----- Cape (sous menton) ----- */
+.hero-mascot__cape {
+  display: var(--mascot-cape-display);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--m) * 0.85);
+  height: calc(var(--m) * 0.32);
+  background: var(--mascot-cape);
+  border: 3px solid var(--ink);
+  border-radius: 16px 16px 50% 50%;
+  box-shadow: inset 0 calc(var(--m) * 0.06) 0 rgba(255, 255, 255, 0.20);
+  z-index: 0;
+}
+
+/* ----- Head ----- */
+.hero-mascot__head {
+  position: absolute;
+  top: calc(var(--m) * 0.18);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--m);
+  height: var(--m);
+  background: var(--mascot-skin);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 calc(var(--m) * -0.08) 0 var(--mascot-skin-shade),
+    var(--shadow-stick-sm);
+  z-index: 1;
+}
+
+/* ----- Hat ----- */
+.hero-mascot__hat {
+  display: var(--mascot-hat-display);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, calc(var(--m) * 0.10));
+  width: calc(var(--m) * 0.95);
+  height: calc(var(--m) * var(--mascot-hat-h));
+  background: var(--mascot-hat);
+  border: 3px solid var(--ink);
+  border-radius: var(--mascot-hat-shape);
+  z-index: 2;
+}
+.hero-mascot__hat-band {
+  position: absolute;
+  bottom: -3px;
+  left: -3px; right: -3px;
+  height: calc(var(--m) * 0.10);
+  background: var(--mascot-hat-deep);
+  border: 3px solid var(--ink);
+  border-radius: 0 0 6px 6px;
+}
+.hero-mascot__hat-pom {
+  position: absolute;
+  top: calc(var(--m) * -0.10);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--m) * 0.16);
+  height: calc(var(--m) * 0.16);
+  background: var(--mascot-hat-pom);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* ----- Eyes ----- */
+.hero-mascot__eyes {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: calc(var(--m) * 0.15);
+}
+.hero-mascot__eye {
+  position: relative;
+  width: calc(var(--m) * 0.20);
+  height: calc(var(--m) * 0.22);
+  background: var(--mascot-eye-bg);
+  border: 2px solid var(--mascot-eye-border);
+  border-radius: 50%;
+}
+.hero-mascot__pupil {
+  position: absolute;
+  top: 50%; left: calc(50% + var(--mascot-pupil-x));
+  transform: translate(-50%, -50%);
+  width: calc(var(--m) * 0.09);
+  height: calc(var(--m) * 0.09);
+  background: var(--mascot-pupil);
+  border-radius: 50%;
+}
+
+/* ----- Cheeks ----- */
+.hero-mascot__cheek {
+  position: absolute;
+  top: 60%;
+  width: calc(var(--m) * 0.16);
+  height: calc(var(--m) * 0.10);
+  background: var(--mascot-cheek);
+  opacity: var(--mascot-cheek-opacity);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+.hero-mascot__cheek--l { left: 12%; }
+.hero-mascot__cheek--r { right: 12%; }
+
+/* ----- Mouth ----- */
+.hero-mascot__mouth {
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--m) * 0.32);
+  height: calc(var(--m) * 0.16);
+  border: 3px solid var(--mascot-mouth);
+  border-top: none;
+  border-radius: var(--mascot-mouth-shape);
+  background: transparent;
+}
+
+/* ----- Accessory (couronne, ailes, halo, runes selon variant) ----- */
+.hero-mascot__accessory {
+  display: var(--mascot-accessory-display);
+  position: absolute;
+  inset: -8% -10%;
+  pointer-events: none;
+  z-index: 3;
+}
+.hero-mascot__accessory::before {
+  content: var(--mascot-accessory-content);
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: calc(var(--m) * 0.40);
+  filter: drop-shadow(0 2px 0 rgba(38, 26, 61, 0.45));
+}
+
+/* ============================================================
+   VARIANTS — 17 designs (16 spec + bobby fallback)
+   Couleurs choisies pour cohésion stage / rôle.
+   ============================================================ */
+
+/* HÉROS — palette V5.1 cream skin uniforme */
+
+[data-mascot-variant="bobby"] {
+  --mascot-skin: #fff5e1;            /* cream uniforme */
+  --mascot-hat: #ff7a5c;             /* coral */
+  --mascot-hat-deep: #b3553f;
+  --mascot-hat-pom: #ffb938;          /* sun pompon */
+  --mascot-hat-shape: 50% 50% 0 0;
+  --mascot-cape: #d4a3ff;
+}
+
+[data-mascot-variant="rogue"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #5e4a7a;             /* purple-gray hood */
+  --mascot-hat-deep: #3f3354;
+  --mascot-hat-pom: #ff8b9c;
+  --mascot-hat-shape: 60% 60% 30% 30%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape: #3f3354;
+  --mascot-pupil-x: 1px;
+  --mascot-cheek-opacity: 0.40;
+}
+
+[data-mascot-variant="mage"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #b8e3ff;             /* sky */
+  --mascot-hat-deep: #80a8c0;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 50% 50% 8% 8%;
+  --mascot-hat-h: 0.65;
+  --mascot-cape: #6a3b9e;
+}
+
+[data-mascot-variant="guardian"],
+[data-mascot-variant="knight"] {
+  --mascot-skin: #fff5e1;            /* cream uniforme */
+  --mascot-hat: #ffb938;             /* sun helmet */
+  --mascot-hat-deep: #b38128;
+  --mascot-hat-pom: #ff7a5c;
+  --mascot-hat-shape: 60% 60% 18% 18%;
+  --mascot-hat-h: 0.40;
+  --mascot-cape: #b8e3ff;
+  --mascot-pupil-x: 0px;
+  --mascot-cheek-opacity: 0;
+  --mascot-mouth-shape: 0 0 4px 4px;
+}
+
+[data-mascot-variant="gourmand"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #ffffff;
+  --mascot-hat-deep: #e8e0d2;
+  --mascot-hat-pom: #ffffff;
+  --mascot-hat-shape: 50% 50% 12% 12%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape: #ff7a5c;
+  --mascot-cheek: #ff8b9c;            /* rose gourmand */
+  --mascot-cheek-opacity: 0.85;
+}
+
+[data-mascot-variant="archer"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #a3d990;              /* mint pastel */
+  --mascot-hat-deep: #6fa05f;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 60% 60% 35% 35%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape: #6fa05f;
+}
+
+[data-mascot-variant="priest"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #fff5e1;              /* cream */
+  --mascot-hat-deep: #f4e4c1;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 60% 60% 30% 30%;
+  --mascot-hat-h: 0.50;
+  --mascot-cape: #ffffff;
+  --mascot-accessory-display: block;
+  --mascot-accessory-content: '✦';
+}
+
+/* ENNEMIS STAGE 1 — pastels */
+
+[data-mascot-variant="slime"] {
+  --mascot-skin: #a3d990;             /* vert pastel */
+  --mascot-skin-shade: rgba(38, 26, 61, 0.16);
+  --mascot-hat-display: none;
+  --mascot-cape-display: none;
+  --mascot-cheek: #ff8b9c;
+  --mascot-cheek-opacity: 0.30;
+  --mascot-mouth-shape: 0 0 calc(var(--m) * 0.30) calc(var(--m) * 0.30);
+}
+
+[data-mascot-variant="bat"] {
+  --mascot-skin: #5e4a7a;             /* purple-gray */
+  --mascot-hat-display: none;
+  --mascot-cape: #3a2f5e;
+  --mascot-cape-display: block;
+  --mascot-pupil: #ffb938;            /* yeux jaunes sun */
+  --mascot-eye-bg: #fff5e1;
+  --mascot-mouth-shape: 0 0 6px 6px;
+}
+[data-mascot-variant="bat"] .hero-mascot__cape {
+  width: calc(var(--m) * 1.20);     /* ailes étalées */
+  height: calc(var(--m) * 0.40);
+  border-radius: 50% 50% 8% 8% / 80% 80% 8% 8%;
+  animation: bat-flap 0.6s ease-in-out infinite;
+}
+
+/* ENNEMIS STAGE 2 — vide magique */
+
+[data-mascot-variant="ghost"] {
+  --mascot-skin: #fff5e1;             /* cream pâle */
+  --mascot-skin-shade: rgba(184, 227, 255, 0.30);
+  --mascot-hat-display: none;
+  --mascot-cape-display: none;
+  --mascot-eye-bg: var(--ink);
+  --mascot-eye-border: var(--ink);
+  --mascot-pupil: #b8e3ff;            /* accent sky */
+  --mascot-cheek-opacity: 0.20;
+  --mascot-mouth-shape: 0 0 50% 50%;
+}
+
+[data-mascot-variant="witch"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #7a2dd0;              /* violet sombre */
+  --mascot-hat-deep: #4d1c89;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 50% 50% 0 0;
+  --mascot-hat-h: 0.85;
+  --mascot-cape: #3a2f5e;
+  --mascot-cheek: #a3d990;
+  --mascot-cheek-opacity: 0.70;
+}
+
+[data-mascot-variant="plant"],
+[data-mascot-variant="vine"] {
+  --mascot-skin: #a3d990;
+  --mascot-hat: #6fa05f;              /* feuilles vertes */
+  --mascot-hat-deep: #4d7240;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 60% 60% 50% 50%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape-display: none;
+  --mascot-pupil: #7a4d2a;             /* accent terre */
+  --mascot-cheek-opacity: 0;
+}
+
+/* ENNEMIS STAGE 3 — royaume doré */
+
+[data-mascot-variant="guard"],
+[data-mascot-variant="royal-guard"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #ffb938;              /* sun helmet */
+  --mascot-hat-deep: #b38128;
+  --mascot-hat-pom: #ff7a5c;
+  --mascot-hat-shape: 60% 60% 18% 18%;
+  --mascot-hat-h: 0.45;
+  --mascot-cape: #cc7a00;
+  --mascot-cheek-opacity: 0;
+  --mascot-mouth-shape: 0 0 4px 4px;
+}
+
+[data-mascot-variant="golem"] {
+  --mascot-skin: #d4cfc4;             /* stone gray */
+  --mascot-skin-shade: rgba(38, 26, 61, 0.18);
+  --mascot-hat: #8b7a6c;
+  --mascot-hat-deep: #5e503f;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 60% 60% 18% 18%;
+  --mascot-hat-h: 0.30;
+  --mascot-cape-display: none;
+  --mascot-pupil: #ffb938;
+  --mascot-cheek-opacity: 0;
+  --mascot-mouth-shape: 4px 4px 4px 4px;
+}
+
+[data-mascot-variant="soldier"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #ff7a5c;
+  --mascot-hat-deep: #b3553f;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 50% 50% 25% 25%;
+  --mascot-hat-h: 0.40;
+  --mascot-cape: #e85a3c;
+  --mascot-cheek-opacity: 0.30;
+}
+
+/* BOSS — accessory + auras */
+
+[data-mascot-variant="boss-cinder"] {
+  --mascot-skin: #ffb38b;             /* ember peach */
+  --mascot-skin-shade: rgba(232, 90, 60, 0.30);
+  --mascot-hat: #cc4a2c;              /* coral foncé */
+  --mascot-hat-deep: #8b2a14;
+  --mascot-hat-pom: #ffb938;
+  --mascot-hat-shape: 50% 50% 12% 12%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape: #8b2a14;
+  --mascot-pupil: #ffb938;
+  --mascot-cheek: #ff7a5c;
+  --mascot-cheek-opacity: 0.85;
+  --mascot-accessory-display: block;
+  --mascot-accessory-content: '👑';
+}
+
+[data-mascot-variant="boss-void"] {
+  --mascot-skin: #d4a3ff;             /* violet pâle */
+  --mascot-hat: #7a2dd0;
+  --mascot-hat-deep: #4d1c89;
+  --mascot-hat-pom: #ffd28a;
+  --mascot-hat-shape: 50% 50% 0 0;
+  --mascot-hat-h: 0.95;
+  --mascot-cape: #3a2f5e;
+  --mascot-pupil: #ffd28a;
+  --mascot-cheek: #ff8b9c;
+  --mascot-cheek-opacity: 0.70;
+  --mascot-accessory-display: block;
+  --mascot-accessory-content: '✦';
+}
+
+[data-mascot-variant="boss-king"],
+[data-mascot-variant="boss-broken-king"] {
+  --mascot-skin: #fff5e1;
+  --mascot-hat: #ffb938;              /* or */
+  --mascot-hat-deep: #cc7a00;
+  --mascot-hat-pom: #ffd28a;
+  --mascot-hat-shape: 60% 60% 35% 35%;
+  --mascot-hat-h: 0.55;
+  --mascot-cape: #e85a3c;             /* royal coral cape */
+  --mascot-pupil: #261a3d;
+  --mascot-cheek-opacity: 0.30;
+  --mascot-accessory-display: block;
+  --mascot-accessory-content: '👑';
+}
+
+/* ============================================================
+   MOODS — overrides via [data-mascot-mood]
+   ============================================================ */
+
+.hero-mascot--mood-idle {
+  /* défaut, float-y déjà actif */
+}
+
+.hero-mascot--mood-attacking {
+  animation: chero-attack 450ms var(--ease-impact);
+  z-index: 5;
+}
+[data-mascot-side="enemy"].hero-mascot--mood-attacking {
+  animation-name: enemy-attack;
+}
+
+.hero-mascot--mood-hurt {
+  animation: hurt-shake 320ms ease-in-out;
+}
+.hero-mascot--mood-hurt .hero-mascot__head {
+  filter: brightness(0.85) saturate(1.4);
+}
+
+.hero-mascot--mood-ko {
+  animation: none !important;
+  filter: grayscale(0.7) brightness(0.85);
+  opacity: 0.6;
+}
+.hero-mascot--mood-ko .hero-mascot__eye {
+  background: var(--ink);
+}
+.hero-mascot--mood-ko .hero-mascot__pupil {
+  display: none;
+}
+.hero-mascot--mood-ko .hero-mascot__eye::before,
+.hero-mascot--mood-ko .hero-mascot__eye::after {
+  /* X mort */
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 80%; height: 2px;
+  background: white;
+  transform-origin: center;
+}
+.hero-mascot--mood-ko .hero-mascot__eye::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.hero-mascot--mood-ko .hero-mascot__eye::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.hero-mascot--mood-ko .hero-mascot__mouth {
+  border-radius: 4px 4px 0 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: none;
+  height: calc(var(--m) * 0.06);
+}
+
+.hero-mascot--mood-happy .hero-mascot__mouth {
+  height: calc(var(--m) * 0.20);
+  border-width: 4px;
+}
+.hero-mascot--mood-happy .hero-mascot__cheek {
+  opacity: 1;
+}
+
+.hero-mascot--mood-angry {
+  --mascot-pupil-x: 0px;
+}
+.hero-mascot--mood-angry .hero-mascot__eye {
+  height: calc(var(--m) * 0.16);     /* yeux mi-clos */
+}
+.hero-mascot--mood-angry .hero-mascot__mouth {
+  border-radius: calc(var(--m) * 0.25) calc(var(--m) * 0.25) 0 0;
+  border-top: 3px solid var(--ink);
+  border-bottom: none;
+  bottom: 14%;
+}
+
+/* ============================================================
+   KEYFRAMES locales mascotte
+   ============================================================ */
+@keyframes bat-flap {
+  0%, 100% { transform: translateX(-50%) scaleY(1); }
+  50%      { transform: translateX(-50%) scaleY(0.65); }
+}
+@keyframes hurt-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px) rotate(-3deg); }
+  40%      { transform: translateX(5px)  rotate(3deg); }
+  60%      { transform: translateX(-4px) rotate(-2deg); }
+  80%      { transform: translateX(3px); }
+}
+
+/* ============================================================
+   Reduced motion — désactive float, flap, attack
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .hero-mascot,
+  .hero-mascot * {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,335 @@
+/* ============================================================
+   V4 — Cartes personnages (CharacterCardDetailed) + raretés
+   À COLLER après le bloc tokens.css dans src/styles.css.
+   ============================================================ */
+
+/* ----- Halo extérieur radial (rareté-aware) ----- */
+.character-card-detailed {
+  position: relative;
+  width: 320px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 30% 25%, var(--bg-cream) 0%, white 80%);
+  border: var(--stroke);
+  border-radius: var(--r-xl);
+  padding: 18px 20px 20px;
+  box-shadow:
+    inset 0 0 0 4px var(--rcolor, var(--rarity-common)),
+    inset 0 0 0 6px white,
+    var(--shadow-stick);
+  /* Float-y idle léger (translate-only) */
+  animation: float-y 4s ease-in-out infinite;
+  isolation: isolate; /* contient les pseudo halos */
+}
+
+/* Halo radial extérieur (filter blur — limité aux écrans non-combat) */
+.character-card-detailed::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 28px;
+  background: radial-gradient(circle, var(--rcolor, var(--rarity-common)), transparent 65%);
+  opacity: 0;
+  filter: blur(var(--rblur, 0px));
+  z-index: -1;
+  pointer-events: none;
+}
+.rarity-rare       .character-card-detailed::before,
+.character-card-detailed.rarity-rare::before       { opacity: 0.45; }
+.rarity-epic       .character-card-detailed::before,
+.character-card-detailed.rarity-epic::before,
+.rarity-epique     .character-card-detailed::before,
+.character-card-detailed.rarity-epique::before     { opacity: 0.55; animation: pulse-halo 3s ease-in-out infinite; }
+.rarity-legendary  .character-card-detailed::before,
+.character-card-detailed.rarity-legendary::before,
+.rarity-legendaire .character-card-detailed::before,
+.character-card-detailed.rarity-legendaire::before { opacity: 0.70; }
+.rarity-mythic     .character-card-detailed::before,
+.character-card-detailed.rarity-mythic::before,
+.rarity-runique    .character-card-detailed::before,
+.character-card-detailed.rarity-runique::before    { opacity: 0.85; }
+
+/* ----- Idle anims par rareté (override sur la carte elle-même) ----- */
+.character-card-detailed.rarity-common,
+.character-card-detailed.rarity-commune {
+  /* common : float-y seulement */
+}
+.character-card-detailed.rarity-rare {
+  /* rare : shimmer-x sur portrait (cf. .character-card-detailed__portrait::after) */
+}
+.character-card-detailed.rarity-epic,
+.character-card-detailed.rarity-epique {
+  /* epic : pulse-halo sur ::before halo (déjà appliqué ci-dessus) */
+}
+.character-card-detailed.rarity-legendary,
+.character-card-detailed.rarity-legendaire {
+  animation: float-y 4s ease-in-out infinite, breathe 6s ease-in-out infinite;
+}
+.character-card-detailed.rarity-mythic,
+.character-card-detailed.rarity-runique {
+  animation: float-y 4s ease-in-out infinite, wobble 5s ease-in-out infinite;
+}
+
+/* ----- Hover / selected / locked ----- */
+.character-card-detailed:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 0 0 4px var(--rcolor, var(--rarity-common)),
+    inset 0 0 0 6px white,
+    var(--shadow-stick-lg),
+    0 0 32px var(--rcolor, transparent);
+}
+.character-card-detailed.is-selected {
+  outline: 4px solid var(--rcolor, var(--brand-coral));
+  outline-offset: 6px;
+}
+.character-card-detailed.is-locked {
+  filter: grayscale(0.6) brightness(0.75);
+}
+.character-card-detailed.is-locked .character-card-detailed__portrait::before {
+  content: '?';
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 96px;
+  color: var(--ink-muted);
+  background: var(--bg-cream-deep);
+}
+.character-card-detailed.is-locked .character-card-detailed__name,
+.character-card-detailed.is-locked .character-card-detailed__role {
+  visibility: hidden;
+}
+.character-card-detailed.is-locked .character-card-detailed__locked-tag {
+  display: block;
+  font-family: var(--font-display);
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  letter-spacing: 1px;
+}
+
+/* ----- Top : rank pill + rarity badge ----- */
+.character-card-detailed__top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.character-card-detailed__rank-pill {
+  font-family: var(--font-display);
+  font-size: 12px;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--ink);
+  border: var(--stroke-thin);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  box-shadow: var(--shadow-stick-sm);
+}
+.character-card-detailed__rarity-badge {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: var(--rcream, var(--rarity-common-cream));
+  color: var(--rdeep, var(--rarity-common-deep));
+  border: 2px solid var(--rcolor);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  box-shadow: var(--shadow-stick-sm);
+}
+
+/* ----- Portrait 140px ----- */
+.character-card-detailed__portrait {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(circle at 30% 25%, var(--bg-cream), var(--bg-cream-deep));
+  border: var(--stroke-thin);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: flex; align-items: flex-end; justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: inset 0 -10px 0 rgba(38, 26, 61, 0.06);
+}
+/* Shimmer rare */
+.character-card-detailed.rarity-rare .character-card-detailed__portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-x 4s linear infinite;
+  pointer-events: none;
+}
+
+/* ----- Name + role ----- */
+.character-card-detailed__name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.5px;
+  color: var(--rdeep, var(--ink));
+  -webkit-text-stroke: 1px var(--ink);
+  text-shadow: 0 2px 0 rgba(38, 26, 61, 0.40);
+  margin: 0 0 2px;
+}
+.character-card-detailed__role {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+/* ----- Stats grid 2×2 ----- */
+.character-card-detailed__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--paper);
+  border: var(--stroke-thin);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+.character-card-detailed__stat {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.character-card-detailed__stat-icon {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  flex-shrink: 0;
+}
+.character-card-detailed__stat--hp .character-card-detailed__stat-icon  { background: var(--hp-good); }
+.character-card-detailed__stat--atk .character-card-detailed__stat-icon { background: var(--rage); }
+.character-card-detailed__stat--mag .character-card-detailed__stat-icon { background: var(--mana); }
+.character-card-detailed__stat--def .character-card-detailed__stat-icon { background: var(--shield); }
+
+/* ----- Skill bloc ----- */
+.character-card-detailed__skill {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--rcream, var(--rarity-common-cream));
+  border: var(--stroke-thin);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+.character-card-detailed__skill-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--rcolor);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 14px;
+  box-shadow: var(--shadow-stick-sm);
+}
+.character-card-detailed__skill-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--rdeep);
+  margin: 0;
+}
+.character-card-detailed__skill-desc {
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin: 2px 0 0;
+}
+
+/* ----- Trait pill ----- */
+.character-card-detailed__trait {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-stick-sm);
+}
+
+/* ----- Foot : frags + rank stars ----- */
+.character-card-detailed__foot {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.character-card-detailed__frags {
+  font-family: var(--font-display);
+  font-size: 12px;
+  background: var(--brand-grape);
+  color: white;
+  border: var(--stroke-thin);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  box-shadow: var(--shadow-stick-sm);
+}
+.character-card-detailed__stars {
+  display: flex; gap: 2px;
+  color: var(--brand-sun);
+  font-size: 14px;
+  text-shadow: 0 1px 0 var(--ink);
+}
+
+/* ============================================================
+   SPARKLES — légendaire (1 sparkle) / mythique (2 sparkles)
+   Cap explicite cf. décision designer.
+   ============================================================ */
+.character-card-detailed__sparkle {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: var(--rcolor);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--rcolor);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4;
+  animation: spark 3s ease-in-out infinite;
+}
+/* Spawn coords par instance — passées via style inline du React (--sx, --sy, --delay) */
+.character-card-detailed__sparkle {
+  top: var(--sy, 20%);
+  left: var(--sx, 20%);
+  animation-delay: var(--delay, 0s);
+}
+.rarity-common  .character-card-detailed__sparkle,
+.rarity-commune .character-card-detailed__sparkle,
+.rarity-rare    .character-card-detailed__sparkle,
+.rarity-epic    .character-card-detailed__sparkle,
+.rarity-epique  .character-card-detailed__sparkle { display: none; }
+
+/* ============================================================
+   Locked state — silhouette + tagline
+   ============================================================ */
+.character-card-detailed__locked-tag { display: none; }
+
+/* ============================================================
+   Reduced motion — désactive tout animé sur la carte
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .character-card-detailed,
+  .character-card-detailed::before,
+  .character-card-detailed__portrait::after,
+  .character-card-detailed__sparkle {
+    animation: none !important;
+  }
+  .character-card-detailed::before {
+    /* Halo toujours visible mais statique */
+    animation: none !important;
+  }
+}

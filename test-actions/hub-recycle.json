@@ -1,0 +1,33 @@
+{
+  "description": "Open the recycle tab and confirm a recycle.",
+  "target": "#recycle-confirm",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-tab-recycle"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": ".recycle-row .btn-shop"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#recycle-confirm"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

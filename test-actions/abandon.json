@@ -1,0 +1,36 @@
+{
+  "description": "Lance la run, passe le stage-intro pour atteindre le combat, puis clique abandonner. Met a jour le flux V2 team -> stage-intro -> combat.",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "mouse_x": 160,
+      "mouse_y": 494,
+      "selector": "#team-start"
+    },
+    {
+      "buttons": [],
+      "frames": 24
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#stage-intro-enter"
+    },
+    {
+      "buttons": [],
+      "frames": 24
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "mouse_x": 1040,
+      "mouse_y": 102,
+      "selector": "#abandon-run"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    }
+  ]
+}

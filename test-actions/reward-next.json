@@ -1,0 +1,36 @@
+{
+  "description": "Lance la run, traverse le stage-intro, attend la victoire du combat 1, puis clique le 1er reward (reward-0). Met a jour le flux V2.",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "mouse_x": 160,
+      "mouse_y": 494,
+      "selector": "#team-start"
+    },
+    {
+      "buttons": [],
+      "frames": 24
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#stage-intro-enter"
+    },
+    {
+      "buttons": [],
+      "frames": 300
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "mouse_x": 240,
+      "mouse_y": 450,
+      "selector": "#reward-0"
+    },
+    {
+      "buttons": [],
+      "frames": 80
+    }
+  ]
+}

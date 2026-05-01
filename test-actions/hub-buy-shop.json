@@ -1,0 +1,24 @@
+{
+  "description": "Buy the first shop item in the hub.",
+  "target": "#shop-buy-0",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-tab-shop"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#shop-buy-0"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Use the first consumable slot during combat.",
+  "target": "#consumable-0",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#consumable-0"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

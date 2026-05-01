@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bobby Industries — atelier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/>
+<template id="__bundler_thumbnail" data-bg-color="#040814">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#040814"/>
+    <g stroke="#2f80ff" stroke-width="1.2" fill="none" opacity="0.5">
+      <circle cx="300" cy="250" r="3" fill="#6db6ff"/>
+      <circle cx="520" cy="180" r="2" fill="#6db6ff"/>
+      <circle cx="720" cy="320" r="4" fill="#6db6ff"/>
+      <circle cx="920" cy="240" r="2" fill="#6db6ff"/>
+      <circle cx="400" cy="520" r="3" fill="#6db6ff"/>
+      <circle cx="680" cy="580" r="2" fill="#6db6ff"/>
+      <circle cx="880" cy="480" r="3" fill="#6db6ff"/>
+      <line x1="300" y1="250" x2="520" y2="180"/>
+      <line x1="520" y1="180" x2="720" y2="320"/>
+      <line x1="720" y1="320" x2="920" y2="240"/>
+      <line x1="400" y1="520" x2="680" y2="580"/>
+      <line x1="680" y1="580" x2="880" y2="480"/>
+      <line x1="720" y1="320" x2="680" y2="580"/>
+    </g>
+    <text x="600" y="420" text-anchor="middle" font-family="Archivo Black, sans-serif" font-weight="900" font-size="96" fill="#f4f7ff" letter-spacing="-3">BOBBY</text>
+    <text x="600" y="500" text-anchor="middle" font-family="Archivo Black, sans-serif" font-weight="900" font-size="72" fill="#6db6ff" letter-spacing="-2">INDUSTRIES.</text>
+    <text x="600" y="640" text-anchor="middle" font-family="monospace" font-size="18" fill="#6db6ff" letter-spacing="6">UN ATELIER · PAS UN PORTFOLIO</text>
+  </svg>
+</template>
+</head>
+<body>
+
+<!-- background layers -->
+<div class="bi-bg"><canvas id="bgCanvas"></canvas></div>
+<div class="bi-grain"></div>
+
+<!-- top micro -->
+<div class="topbar">
+  <span>BI · <b>atelier</b> · paris · fr</span>
+  <span data-clock>— —:— —</span>
+</div>
+
+<!-- side dot nav -->
+<nav class="sidenav" aria-label="sections">
+  <a href="#top" data-label="accueil"></a>
+  <a href="#manifesto" data-label="manifesto"></a>
+  <a href="#worlds" data-label="les 3 mondes"></a>
+  <a href="#sound" data-label="sound lab"></a>
+  <a href="#contact" data-label="contact"></a>
+</nav>
+
+<!-- atelier link -->
+<a href="atelier.html" class="atelier-link" data-hover>Atelier</a>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top">
+  <div class="hero-left">
+    <span class="hero-tag">En ligne · 2026 · dispo pour nouveaux projets</span>
+    <h1 class="h-mega hero-title" id="heroTitle">
+      <span class="ln1">BOBBY</span><br/>
+      <span class="ln2 accent">INDUSTRIES.</span>
+    </h1>
+    <div class="hero-sub">
+      <div class="hero-index">01 / qui</div>
+      <p class="lead">Je m'appelle <b>Bobby</b>. J'ai 22 ans, je suis designer et je vis à Paris. J'ai un atelier, pas un portfolio. Il tient debout sur trois choses : <b class="text-glow">drg_music</b>, un label. <b class="text-glow">Les Coyotes</b>, une équipe de basket dissidente. <b class="text-glow">L'atelier</b>, où je fais du code, des objets, des images.</p>
+    </div>
+    <div class="hero-sub">
+      <div class="hero-index">02 / comment</div>
+      <div class="hero-chips">
+        <span class="hero-chip on">Design éditorial</span>
+        <span class="hero-chip">Direction artistique</span>
+        <span class="hero-chip">Code créatif</span>
+        <span class="hero-chip">Identités sportives</span>
+        <span class="hero-chip">Objets numériques</span>
+      </div>
+    </div>
+    <div class="hero-cta-row">
+      <a href="#manifesto" class="btn primary" data-hover>Entrer dans l'atelier →</a>
+      <a href="#sound" class="btn ghost" data-hover>Écouter un disque</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="portrait-stage">
+      <div class="portrait-ring"></div>
+      <div class="portrait-img"><img src="portrait.png" alt="Bobby"/><div class="portrait-scanline"></div></div>
+      <div class="portrait-tag"><b>Bobby / 22 ans</b>designer · paris · 2026</div>
+    </div>
+  </div>
+  <div class="hero-worlds">
+    <a href="#worlds" class="world" data-hover>
+      <span class="world-num">monde 01</span>
+      <span class="world-name">drg_music</span>
+      <span class="world-sub">Label, pochettes, identités. Cinq disques sortis.</span>
+    </a>
+    <a href="#worlds" class="world" data-hover>
+      <span class="world-num">monde 02</span>
+      <span class="world-name">Les Coyotes</span>
+      <span class="world-sub">Équipe de basket. Uniformes, trucs imprimés, rituels.</span>
+    </a>
+    <a href="#worlds" class="world" data-hover>
+      <span class="world-num">monde 03</span>
+      <span class="world-name">L'Atelier</span>
+      <span class="world-sub">Code créatif, objets numériques, commandes ouvertes.</span>
+    </a>
+  </div>
+</section>
+
+<!-- ======================= MANIFESTO (pinned) ======================= -->
+<section class="manifesto-pin" id="manifesto">
+  <div class="manifesto-stage">
+    <div class="manifesto-inner">
+      <div class="manifesto-eye">// manifeste · scrolle pour lire</div>
+      <h2 class="manifesto-body" id="manifestoBody"></h2>
+      <div class="manifesto-rhyme">bi · <b>un atelier</b> · pas un portfolio</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WORLDS DETAIL ======================= -->
+<section class="worlds-detail" id="worlds">
+  <div class="shell">
+    <div class="wd-head" data-reveal>
+      <span class="eyebrow">// les trois mondes · pourquoi ils existent</span>
+      <h2 class="h-xl" style="margin-top:18px">Trois pratiques,<br/>une même main.</h2>
+      <p class="body">Je ne fais pas des "projets". Je fais des <b>mondes</b> — chacun avec ses règles, sa matière, ses gens. Ils s'échangent des choses en secret : une typo du label arrive sur un maillot, un geste de basket finit dans une pochette. C'est comme ça que ça tient.</p>
+    </div>
+    <div class="wd-grid">
+      <div class="wd-card" data-reveal data-hover>
+        <div class="wd-cat">monde 01 · son</div>
+        <h3 class="wd-title">drg_music</h3>
+        <p class="wd-text">Un label que je dirige depuis l'atelier. Je dessine les pochettes, les identités, la typo de chaque disque. Cinq sorties, une esthétique qui s'affine. Pas de compromis sur le son, pas de compromis sur l'image.</p>
+        <div class="wd-stack">
+          <span class="wd-tag">pochettes</span><span class="wd-tag">typo</span><span class="wd-tag">clips</span><span class="wd-tag">direction</span>
+        </div>
+      </div>
+      <div class="wd-card" data-reveal data-hover>
+        <div class="wd-cat">monde 02 · corps</div>
+        <h3 class="wd-title">Les Coyotes</h3>
+        <p class="wd-text">Équipe de basket à Paris. J'en dessine l'identité visuelle : uniformes, prints, médias sociaux, rituels de match. Un terrain est un stage. Un maillot est un support. Un logo est un cri.</p>
+        <div class="wd-stack">
+          <span class="wd-tag">uniformes</span><span class="wd-tag">logo</span><span class="wd-tag">imprimés</span><span class="wd-tag">équipe</span>
+        </div>
+      </div>
+      <div class="wd-card" data-reveal data-hover>
+        <div class="wd-cat">monde 03 · matière</div>
+        <h3 class="wd-title">L'Atelier</h3>
+        <p class="wd-text">Ce que vous regardez. Code créatif, objets numériques, commandes pour des gens que j'aime bien. Identités de marques, sites, livres, tout ce qui demande de la main. Je prends peu de commandes — je les choisis bien.</p>
+        <div class="wd-stack">
+          <span class="wd-tag">identités</span><span class="wd-tag">sites</span><span class="wd-tag">livres</span><span class="wd-tag">objets num.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= MARQUEE ======================= -->
+<section class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>drg_music</span><span>les coyotes</span><span>l'atelier</span><span>paris</span><span>bi · 2026</span>
+    <span>drg_music</span><span>les coyotes</span><span>l'atelier</span><span>paris</span><span>bi · 2026</span>
+  </div>
+</section>
+
+<!-- ======================= VINYL LAB ======================= -->
+<section class="vinyl-section" id="sound">
+  <div class="shell">
+    <div id="vinylRoot" data-reveal></div>
+  </div>
+</section>
+
+<!-- ======================= CONTACT ======================= -->
+<section class="contact" id="contact">
+  <div class="shell">
+    <div class="contact-grid">
+      <div class="contact-left" data-reveal>
+        <span class="eyebrow">// prendre contact</span>
+        <h2 class="h-xl" style="margin-top:18px">On se parle ?</h2>
+        <p class="lead">Commandes ouvertes pour identité visuelle, design éditorial, sites. Je réponds à tout, toujours. Compte <em>72 heures</em> avant d'avoir une vraie réponse.</p>
+        <div class="contact-cta">
+          <a href="mailto:bobby@industries.fr" class="btn primary" data-hover>bobby@industries.fr →</a>
+          <a href="atelier.html" class="btn ghost" data-hover>Voir l'atelier</a>
+        </div>
+      </div>
+      <div class="contact-card" data-reveal>
+        <h3>Coordonnées</h3>
+        <dl>
+          <div class="contact-row"><dt>email</dt><dd>bobby@industries.fr</dd></div>
+          <div class="contact-row"><dt>instagram</dt><dd>@bobby.industries</dd></div>
+          <div class="contact-row"><dt>label</dt><dd>drg_music.fr</dd></div>
+          <div class="contact-row"><dt>équipe</dt><dd>lescoyotes.paris</dd></div>
+          <div class="contact-row"><dt>lieu</dt><dd>Paris, 11e</dd></div>
+          <div class="contact-row"><dt>dispo</dt><dd>mars 2026 →</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="foot">
+  <div>© 2026 Bobby Industries</div>
+  <span>un atelier · pas un portfolio</span>
+  <div style="text-align:right"><a href="atelier.html">atelier →</a></div>
+</footer>
+
+<!-- scripts -->
+<script src="core.js"></script>
+<script src="vinyls.js"></script>
+<script>
+(function(){
+  // bg canvas
+  const cvs = document.getElementById("bgCanvas");
+  window.BI_initConstellation(cvs);
+  window.BI_initCursor();
+
+  // reveal
+  window.BI_observeReveal(document.querySelectorAll("[data-reveal]"));
+
+  // hero title char split for per-char animation
+  (function splitHero(){
+    document.querySelectorAll(".hero-title span").forEach(line=>{
+      const txt = line.textContent;
+      line.innerHTML = "";
+      [...txt].forEach((c,i)=>{
+        const s = document.createElement("span");
+        s.className = "ch";
+        s.textContent = c===" "?"\u00a0":c;
+        s.style.setProperty("--i", i);
+        line.appendChild(s);
+      });
+    });
+  })();
+
+  // clock
+  function tickClock(){
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,"0");
+    const m = String(d.getMinutes()).padStart(2,"0");
+    document.querySelector("[data-clock]").innerHTML = "Paris · <b>"+h+":"+m+"</b>";
+  }
+  tickClock(); setInterval(tickClock, 30000);
+
+  // sidenav active state
+  const sections = ["top","manifesto","worlds","sound","contact"];
+  const dots = Array.from(document.querySelectorAll(".sidenav a"));
+  function updateNav(){
+    const y = window.scrollY + innerHeight*0.4;
+    let active = 0;
+    sections.forEach((id,i)=>{
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= y) active = i;
+    });
+    dots.forEach((d,i)=>d.classList.toggle("on", i===active));
+  }
+  updateNav();
+  addEventListener("scroll", updateNav, {passive:true});
+
+  // manifesto scroll-synced words
+  const manifestoText = [
+    {w:"Je", a:false},{w:"fais", a:false},{w:"des", a:false},{w:"choses", a:true},
+    {w:"à", a:false},{w:"la", a:false},{w:"main,", a:false},
+    {w:"pour", a:false},{w:"des", a:false},{w:"gens", a:true},{w:"que", a:false},{w:"j'aime", a:true},{w:"bien.", a:false},
+    {w:"Un", a:false},{w:"atelier", a:true},{w:"—", a:false},
+    {w:"pas", a:false},{w:"un", a:false},{w:"portfolio.", a:true},
+    {w:"Cinq", a:false},{w:"disques,", a:false},
+    {w:"une", a:false},{w:"équipe,", a:false},
+    {w:"mille", a:false},{w:"essais.", a:true},
+    {w:"Et", a:false},{w:"toi", a:true},{w:",", a:false},{w:"tu", a:false},{w:"cherches", a:false},{w:"quoi?", a:true}
+  ];
+  const mBody = document.getElementById("manifestoBody");
+  mBody.innerHTML = manifestoText.map((x,i)=>`<span class="w ${x.a?"accent":""}" data-i="${i}">${x.w}</span>`).join(" ");
+  const mWords = Array.from(mBody.querySelectorAll(".w"));
+  const pin = document.getElementById("manifesto");
+
+  function updateManifesto(){
+    const rect = pin.getBoundingClientRect();
+    const total = pin.offsetHeight - innerHeight;
+    const progress = Math.max(0, Math.min(1, -rect.top / total));
+    const reveal = Math.floor(progress * (mWords.length+2));
+    mWords.forEach((w,i)=> w.classList.toggle("on", i<reveal));
+  }
+  updateManifesto();
+  addEventListener("scroll", updateManifesto, {passive:true});
+
+  // vinyl lab
+  window.BI_initVinyls(document.getElementById("vinylRoot"));
+})();
+</script>
+</body>
+</html>

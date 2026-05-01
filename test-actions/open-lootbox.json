@@ -1,0 +1,24 @@
+{
+  "description": "Open the lootbox on the lootbox screen, then close.",
+  "target": "#lootbox-open",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#lootbox-open"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#lootbox-close"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

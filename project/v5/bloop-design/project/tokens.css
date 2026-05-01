@@ -1,0 +1,110 @@
+/* ============================================================
+   BOBBYCARD ROGUELIKE — Joyful Direction
+   Tokens partagés (à coller dans src/styles.css)
+   ============================================================ */
+
+:root {
+  /* === Fond + neutres === Plus chauds, plus doux, jamais noir pur */
+  --bg-deep: #1a1530;          /* nuit étoilée violet-bleu, pas noir */
+  --bg-mid: #2a2147;           /* mid-tone pour panneaux */
+  --bg-elevated: #3a2f5e;      /* éléments surélevés */
+  --bg-cream: #fff5e1;         /* parchemin crème pour cartes */
+  --bg-cream-deep: #f4e4c1;
+  --ink: #261a3d;              /* texte foncé sur cream */
+  --ink-soft: #4d3d6b;
+  --ink-muted: #7a6c92;
+  --paper: #fffbf0;
+  --paper-line: #e8d5a8;
+
+  /* === Couleurs de marque (joie, candy, mais pas pop fluo) === */
+  --brand-coral:    oklch(72% 0.19 28);   /* corail chaud, signature */
+  --brand-mint:     oklch(78% 0.13 165);  /* menthe douce */
+  --brand-sun:      oklch(85% 0.15 85);   /* jaune soleil */
+  --brand-sky:      oklch(75% 0.13 230);  /* bleu ciel */
+  --brand-grape:    oklch(65% 0.18 305);  /* raisin */
+
+  /* === Stages — chaque stage a une vibe colorée distincte === */
+  --stage-1: oklch(72% 0.13 220);          /* "Prairie Givrée" — bleu glacier doux */
+  --stage-1-deep: oklch(50% 0.13 230);
+  --stage-1-cream: oklch(95% 0.04 220);
+
+  --stage-2: oklch(70% 0.18 310);          /* "Jardin Magique" — violet pétillant */
+  --stage-2-deep: oklch(45% 0.18 305);
+  --stage-2-cream: oklch(95% 0.05 310);
+
+  --stage-3: oklch(74% 0.18 50);           /* "Royaume Doré" — orange/or chaleureux */
+  --stage-3-deep: oklch(50% 0.19 40);
+  --stage-3-cream: oklch(96% 0.04 70);
+
+  /* === Raretés — chacune a sa couleur, son halo, sa densité de particules === */
+  --rarity-common: #9aa3b2;      /* gris-bleu tendre */
+  --rarity-common-deep: #5e6878;
+  --rarity-common-cream: #ecedf0;
+
+  --rarity-rare: #4ec5e8;        /* cyan brillant */
+  --rarity-rare-deep: #1f7fa8;
+  --rarity-rare-cream: #e0f4fb;
+
+  --rarity-epic: #b563ff;        /* violet magique */
+  --rarity-epic-deep: #7a2dd0;
+  --rarity-epic-cream: #f1e3ff;
+
+  --rarity-legendary: #ffb938;   /* or pop */
+  --rarity-legendary-deep: #cc7a00;
+  --rarity-legendary-cream: #fff2d1;
+
+  --rarity-mythic: #ff5fa2;      /* rose nacré (réservé) */
+  --rarity-mythic-deep: #b8246a;
+  --rarity-mythic-cream: #ffe1ee;
+
+  /* === Stats fonctionnelles (combat) === */
+  --hp-good: oklch(75% 0.18 145);     /* vert frais */
+  --hp-warn: oklch(80% 0.18 75);      /* ambre */
+  --hp-low:  oklch(68% 0.21 25);      /* rouge corail */
+  --shield:  oklch(80% 0.10 220);     /* bleu pâle */
+  --mana:    oklch(70% 0.16 270);     /* bleu-violet */
+  --rage:    oklch(70% 0.21 35);      /* orange feu */
+  --poison:  oklch(72% 0.18 140);     /* vert acide doux */
+
+  /* === Coffres (5 tiers, du modeste au festif) === */
+  --chest-wood: #c0894d;
+  --chest-bronze: #d97a3c;
+  --chest-silver: #b8c4d4;
+  --chest-royal: #ffc845;
+  --chest-runic: #5fdfff;          /* runique = féérique cyan, plus que sombre */
+
+  /* === Espacement / radius / ombres — chunky === */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  --stroke: 3px solid var(--ink);   /* cerne épais Clash-style sur cartes */
+  --stroke-thin: 2px solid var(--ink);
+
+  /* "Sticker" shadow : lift épais sans flou (style autocollant) */
+  --shadow-stick-sm: 0 3px 0 rgba(38, 26, 61, 0.35);
+  --shadow-stick:    0 6px 0 rgba(38, 26, 61, 0.45);
+  --shadow-stick-lg: 0 10px 0 rgba(38, 26, 61, 0.55);
+  --shadow-glow:     0 0 32px;       /* couleur fournie par classe rareté */
+  --shadow-soft:     0 8px 22px rgba(0,0,0,0.18);
+
+  /* === Combat speed === */
+  --combat-speed: 1;
+
+  /* === Type === */
+  --font-display: 'Lilita One', 'Fredoka', 'Baloo 2', system-ui, sans-serif; /* chunky cartoon */
+  --font-body:    'Nunito', 'Quicksand', system-ui, sans-serif;             /* rond, lisible */
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* === Reset léger === */
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg-deep);
+  -webkit-font-smoothing: antialiased;
+}

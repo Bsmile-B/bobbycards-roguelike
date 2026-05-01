@@ -1,0 +1,24 @@
+{
+  "description": "Reroll the hub shop (15 gold).",
+  "target": "#shop-reroll",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-tab-shop"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#shop-reroll"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

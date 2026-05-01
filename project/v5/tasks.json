@@ -1,0 +1,296 @@
+[
+  {
+    "id": "V5-T1",
+    "title": "Audit V4 vs bundle — grep classes communes/divergentes/absentes",
+    "owner_role": "frontend-dev",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "Audit consigné en commentaire en tête de section CSS V5 ajoutée ; liste des classes V4 dead à laisser (chest__*, combat-hero, enemy-card, boss-hp-bar, character-card-detailed*, run-progress*, loot-roulette*) confirmée dans specs.md."
+  },
+  {
+    "id": "V5-T2",
+    "title": "Vérifier tokens.css bundle vs styles.css V4 — 110 lignes",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T1"
+    ],
+    "status": "done",
+    "acceptance": "Tous les tokens du bundle sont présents et identiques dans :root de styles.css. Diff vide ou divergences corrigées."
+  },
+  {
+    "id": "V5-T3",
+    "title": "Append _shared.css bundle (.btn, .pill, keyframes float-y/shimmer-x/pulse-halo/spark/breathe/wobble/spin-slow, prefers-reduced-motion)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T2"
+    ],
+    "status": "done",
+    "acceptance": "Toutes les classes et @keyframes du bundle _shared.css sont en fin de styles.css sous séparateur clair. Build clean."
+  },
+  {
+    "id": "V5-T4",
+    "title": "Append cards.css bundle (.pcard*, .hp-*, .sparkles, .stat*) — 213 lignes",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T3"
+    ],
+    "status": "done",
+    "acceptance": "Bloc cards.css collé verbatim. Aucune classe V4 character-card-detailed touchée. Build clean."
+  },
+  {
+    "id": "V5-T5",
+    "title": "Append chests.css bundle (.chest*, .rou*, .mini-*) — 254 lignes",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T3"
+    ],
+    "status": "done",
+    "acceptance": "Bloc chests.css collé. .chest-lid/.chest-body/.chest-rune/.chest-burst/.chest-aura/.chest-shadow/.chest-name présents. .rou .rou-frame .rou-marker .rou-fade .rou-strip .rou-item .mini-portrait présents. Build clean."
+  },
+  {
+    "id": "V5-T6",
+    "title": "Append combat.css bundle (.chero*, .enemy*, .e-slime/bat/boss, .combat-bg--*, .pp, .cres, .cbb-*, .spell--*, .fnum*, .sk*, .cons*, .speed-btn*) — 611 lignes",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T3"
+    ],
+    "status": "done",
+    "acceptance": "Bloc combat.css collé. Toutes les classes citées présentes. Aucune règle V4 (combat-hero, enemy-card, boss-hp-bar) supprimée — elles deviennent dead inertes. Build clean."
+  },
+  {
+    "id": "V5-T7",
+    "title": "Supprimer composant HeroMascot et helpers obsolètes (mapPersonaToVariant, mapEnemyNameToVariant, computeHeroMood/computeEnemyMood) ou les marquer @deprecated",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6"
+    ],
+    "status": "done",
+    "acceptance": "0 import / appel <HeroMascot> dans App.tsx. Helpers V4 supprimés ou conservés pour compat type Enemy.mascot mais non émis dans le DOM."
+  },
+  {
+    "id": "V5-T8",
+    "title": "Créer helper mapEnemyToDAType(name, isBoss): { type, palette }",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T7"
+    ],
+    "status": "done",
+    "acceptance": "Fonction TS exportée, retourne 'slime'|'bat'|'boss' + { c, cream, glow }. Mapping testé avec ~10 ennemis V1+V2+V3 + 3 boss."
+  },
+  {
+    "id": "V5-T9",
+    "title": "Créer helper mapSkillToSpellType(c, special): 'magic'|'phys'|'heal'|'aoe'",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T7"
+    ],
+    "status": "done",
+    "acceptance": "Fonction retournant un spell type. heal→heal ; shield→magic ; attack avec physical>=magic→phys, sinon magic ; AOE pour skills boss explicitement marqués."
+  },
+  {
+    "id": "V5-T10",
+    "title": "Créer helper getRarityProps(rarity) + getChestTierColors(tier)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T7"
+    ],
+    "status": "done",
+    "acceptance": "Constantes RARITIES (5 entrées avec color/deep/cream/particles/idle/sparkColor) + CHEST_TIERS (5 entrées avec color/deep/glow/name) exportées."
+  },
+  {
+    "id": "V5-T11",
+    "title": "Créer composants HeroPortrait + Sparkles selon cards.jsx",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T10"
+    ],
+    "status": "done",
+    "acceptance": "<HeroPortrait rarity={rarityProps}> émet hp-wrap > hp-spotlight + hp-body > hp-head + hp-hat (color via style) + hp-eyes/cheek/mouth + hp-cape. <Sparkles count color> émet sparkles > N×sparkle avec --dx/--dy/delay/size. Match cards.jsx exact."
+  },
+  {
+    "id": "V5-T12",
+    "title": "Refactor CharacterCardDetailed → markup pcard",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T4",
+      "V5-T11"
+    ],
+    "status": "done",
+    "acceptance": "CharacterCardDetailed émet pcard pcard--{rarity} avec --rcolor/--rdeep/--rcream inline ; pcard-halo + Sparkles + pcard-frame > pcard-top (rank+rarity-badge) + pcard-portrait > HeroPortrait + pcard-name + pcard-role + pcard-stats (6 stats grid 2x3) + pcard-skill + pcard-trait + pcard-foot. Props existantes (mode, size, isSelected, isLocked, onClick, fragments, rank) préservées. État verrouillé = pcard-locked. Build clean."
+  },
+  {
+    "id": "V5-T13",
+    "title": "Refactor CombatHero → markup chero",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6",
+      "V5-T7"
+    ],
+    "status": "done",
+    "acceptance": "CombatHero émet chero (avec is-attacking/is-casting/is-ko/is-selected) > chero-glow + chero-frame > chero-portrait > chero-rays + chero-mascot (chero-hat/head/eye×2/mouth/cape) + chero-cast-ring (si casting) + chero-bottom (chero-name/role/bar/cooldown). Couleur héros déduite de la rareté (color = RARITIES[rarity].color). Props (member, onSpecial, anim) inchangées."
+  },
+  {
+    "id": "V5-T14",
+    "title": "Refactor EnemyCard → markup enemy + e-slime/e-bat/e-boss",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6",
+      "V5-T8"
+    ],
+    "status": "done",
+    "acceptance": "EnemyCard émet enemy enemy--boss? avec --ec/--eg inline. enemy-glow + enemy-frame > enemy-portrait > <e-slime|e-bat|e-boss> selon mapEnemyToDAType, puis enemy-name + enemy-bar + intent intent--{attack,debuff,aoe}. e-slime contient e-slime-shine/e-eye×2/e-mouth/e-drop×2. e-bat contient e-bat-wing×2/e-eye×2/e-fangs. e-boss contient e-boss-crown/glow/aura/eye×2/mouth/spike×2. Boss bar V4 isolé (extrait dans un nouveau BossHpBar)."
+  },
+  {
+    "id": "V5-T15",
+    "title": "Créer BossHpBar dédié (combat-boss-bar + cbb-*) et le placer en haut du combat-screen",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T14"
+    ],
+    "status": "done",
+    "acceptance": "Composant BossHpBar({ bossName, phase, hp, hpMax }) émet combat-boss-bar > cbb-name (cbb-star + name + cbb-phase) + cbb-bar > cbb-fill + cbb-divider + cbb-text. Inséré dans CombatScreen (au-dessus du combat-field) si run.enemy.boss. EnemyCard ne contient plus de boss-hp-bar."
+  },
+  {
+    "id": "V5-T16",
+    "title": "Refactor RunProgress → 30 dots pp pp--s{1,2,3} pp--cur pp--boss pp--done",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6"
+    ],
+    "status": "done",
+    "acceptance": "RunProgress émet combat-progress + 30 spans pp avec classes correctes selon stage/wave/done/cur/boss. ID #run-progress conservé. Aria-* conservés."
+  },
+  {
+    "id": "V5-T17",
+    "title": "Refactor combat-top : combat-stage-pill + csp-icon + combat-resources + cres + cres-icon",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6"
+    ],
+    "status": "done",
+    "acceptance": "combat-top contient .combat-stage-pill (avec csp-icon + 'ACTE I·VAGUE N'), .combat-progress (T16), .combat-resources (cres or + cres fragments avec cres-icon)."
+  },
+  {
+    "id": "V5-T18",
+    "title": "Refactor CombatScreen background : 4 layers combat-bg--{sky,clouds,mist,specks}",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6"
+    ],
+    "status": "done",
+    "acceptance": "CombatScreen rend les 4 div .combat-bg .combat-bg--sky/clouds/mist/specks au début du DOM. Classes stage-1/2/3 supprimées du combat-screen (palette uniforme nuit violet/rose). Skybox V4 (.bg-sky-day) supprimée du markup."
+  },
+  {
+    "id": "V5-T19",
+    "title": "Spells layer : combat-center + 4 spell--{magic,phys,heal,aoe} pilotés par animQueue",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6",
+      "V5-T9"
+    ],
+    "status": "done",
+    "acceptance": "combat-center contient les 4 spell--* (chacun avec son markup interne spell-orb/trail/arrow/cross×3/shock). Toggled is-active selon animQueue/anim state. Re-key par tick pour retrigger animation. Projectile V3 conservé en parallèle (inerte si non utilisé)."
+  },
+  {
+    "id": "V5-T20",
+    "title": "Refactor footer skills + consumables + speed (sk/cons/speed-btn) + boutons CTA en .btn .btn--primary",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T6"
+    ],
+    "status": "done",
+    "acceptance": "combat-footer contient .combat-skills > .sk + .combat-consumables > .cons + .combat-speed > .speed-btn. Hotkey via .sk-key. .sk-icon-pulse halo si ready. CTA principaux du jeu utilisent .btn .btn--primary (alias .primary-action conservé). IDs Playwright #speed-1/-25/-5/#consumable-N/#open-chest/#stage-intro-enter/#run-progress conservés."
+  },
+  {
+    "id": "V5-T21",
+    "title": "Refactor LootRoulette → rou + rou-strip + rou-item + mini-portrait",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T5",
+      "V5-T11"
+    ],
+    "status": "done",
+    "acceptance": "LootRoulette émet .rou > .rou-frame > .rou-marker + .rou-fade--l/r + .rou-strip (avec translate3d) > N×.rou-item.rou-item--{rarity} > .mini-portrait > .mini-head (mini-hat + mini-eye×2 + mini-mouth) + .rou-item-name. ID #loot-roulette-strip conservé. testHookRef et reducedMotion conservés."
+  },
+  {
+    "id": "V5-T22",
+    "title": "Refactor FinalChest → chest-aura + chest-shadow + chest-body > chest-lid (lid-band-top, lid-keyhole, lid-stud--l/r) + chest-box (chest-box-band, chest-box-lock) + chest-rune×3 (runic only) + chest-burst",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T5",
+      "V5-T10"
+    ],
+    "status": "done",
+    "acceptance": "FinalChest émet chest chest--{tier} is-opening avec --ccolor/--cdeep/--cglow inline depuis getChestTierColors. Markup respecte chests.jsx L8-48. ID #open-chest conservé sur le bouton primary. Animation 700ms cubic-bezier respectée."
+  },
+  {
+    "id": "V5-T23",
+    "title": "Audit régression IDs Playwright + hooks de test V3",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T22"
+    ],
+    "status": "done",
+    "acceptance": "grep dans App.tsx confirme : id=\"stage-intro-enter\", id=\"open-chest\", id=\"speed-1\"/-25/-5, id=\"consumable-{0,1,2}\", id=\"loot-roulette-strip\", id=\"run-progress\". window.__game_test_skip_roulette/skip_boss_intro/__game_test_* présents. localStorage clé runebound-cards-save-v1 inchangée."
+  },
+  {
+    "id": "V5-T24",
+    "title": "Build + smoke check final",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T23"
+    ],
+    "status": "done",
+    "acceptance": "npm run build : 0 erreur, 0 warning. npm run dev démarre. Smoke manuel : combat-screen palette violet/rose, héros chero, ennemis e-slime/bat/boss, boss bar cbb, cards pcard, chest chest-lid, roulette rou."
+  },
+  {
+    "id": "V5-T25",
+    "title": "[FIX major M1] Refactor combat-footer V3 → markup bundle (combat-skills/sk + combat-consumables/cons + combat-speed/speed-btn)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T24"
+    ],
+    "status": "done",
+    "acceptance": "Le combat-screen combat-footer émet exactement : <div class='combat-footer'> > <div class='combat-skills'> > 3× <button class='sk sk--ready|sk--cooling is-pulse?' ><div class='sk-icon' style='background:color'><span>icon</span>{ready?<div class='sk-icon-pulse'/>:null}</div><div class='sk-meta'><div class='sk-name'>NOM</div><div class='sk-cd'>PRÊT|3.2s</div></div>{!ready?<div class='sk-cdbar'><div class='sk-cdbar-fill' style='width:%'/></div>:null}<div class='sk-key'>1|2|3</div></button> + <div class='combat-consumables'> > 3× <div class='cons|cons--empty'><div class='cons-icon'>icon</div><div class='cons-name'>nom</div><div class='cons-qty'>×N</div></div> + <div class='combat-speed'> > 3× <button class='speed-btn speed-btn--active?' id='speed-1|speed-1-25|speed-1-5'>×1|×1.25|×1.5</button>. IDs Playwright (#speed-*, #consumable-N) tous conservés. Hooks de test V3 (__game_test_*) tous fonctionnels. Build clean. Test : grep 'class=\"sk' dans App.tsx retourne ≥3 résultats."
+  },
+  {
+    "id": "V5-T26",
+    "title": "[FIX major M2] Ajouter @keyframes spin-slow manquant (référencé par cbb-star + chero-rays)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T24"
+    ],
+    "status": "done",
+    "acceptance": "Dans styles.css, ajouter dans le bloc V5 _shared : @keyframes spin-slow { to { transform: rotate(360deg); } }. Vérifier que cbb-star (combat-boss-bar) tourne en 8s linear et chero-rays en 14s linear. Build clean."
+  },
+  {
+    "id": "V5-T27",
+    "title": "[FIX major M3] Remplacer @keyframes spark V4 par version bundle (lecture --dx/--dy)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T24"
+    ],
+    "status": "done",
+    "acceptance": "Le keyframe spark dans styles.css utilise translate(var(--dx,0), var(--dy,0)) au lieu de hardcoded translate(2px,-3px) etc. Format bundle exact : 0%{translate(0,0) scale(0)} 20%{translate(--dx,--dy) scale(1) opacity:1} 100%{translate(--dx*2,--dy*2) scale(0) opacity:0}. Vérifier qu'aucun bloc V4 dépendant de la version hardcoded n'est cassé visuellement (.character-card-detailed__sparkle est dead V5, OK). Sparkles légendaire (8) et mythique (12) tracent leurs orbites. Build clean."
+  },
+  {
+    "id": "V5-T28",
+    "title": "[FIX major M4] Aligner @keyframes breathe/wobble/pulse-halo avec le bundle",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T24"
+    ],
+    "status": "done",
+    "acceptance": "Keyframes alignés bundle exact : breathe { 0,100: scale(1) rotate(0); 50: scale(1.04) rotate(0.5deg) } ; wobble { 0,100: rotate(-1.5deg); 50: rotate(1.5deg) } ; pulse-halo { 0,100: scale(1) opacity:0.55; 50: scale(1.08) opacity:0.85 }. Vérifier que les blocs V4 dépendants (HeroMascot V4 dans Hub Équipe) ne perdent pas leur identité visuelle ; si oui, dupliquer en variantes nommées breathe-v4 etc. pour le legacy. Build clean. Cards Légendaire (breathe) respirent visiblement, Mythique (wobble) oscillent en rotation."
+  },
+  {
+    "id": "V5-T29",
+    "title": "[OPTIONAL minor m1] Réduire CombatHud V2 ou le sortir du combat-screen pour respecter 1232×720",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V5-T24"
+    ],
+    "status": "pending",
+    "acceptance": "OPTIONNEL — sujet V6. Trois pistes possibles : (a) intégrer hud-tile lives/record dans combat-top (en plus de stage-pill + progress + resources), (b) déplacer hud-panels (stats run + stats équipe) dans un drawer collapsible hors combat-screen, (c) accepter la dette et documenter dans decisions.md V5 que la maquette est artistique et le HUD V2 est une couche fonctionnelle complémentaire. À décider avec l'orchestrator avant V5-T29."
+  }
+]

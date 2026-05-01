@@ -1,0 +1,411 @@
+/* ============================================================
+   V4 — Joyful Direction — Tokens
+   À COLLER dans le bloc :root de src/styles.css (remplace l'existant
+   ou s'ajoute en bas — décision dev : append puis cleanup post-build).
+   Stratégie : rename in-place + extension (cf. decisions.md V4).
+   - Les tokens V2/V3 existants conservent leur NOM.
+   - Leurs VALEURS sont réassignées vers candy.
+   - Les nouveaux tokens DA sont AJOUTÉS en parallèle.
+   ============================================================ */
+
+:root {
+  /* === V4 SHELL — Fond + neutres (warmer, jamais noir pur) === */
+  --bg-deep: #1a1530;            /* nuit étoilée violet-bleu, signature */
+  --bg-mid: #2a2147;
+  --bg-elevated: #3a2f5e;
+  --bg-cream: #fff5e1;           /* parchemin pour cartes */
+  --bg-cream-deep: #f4e4c1;
+  --ink: #261a3d;                /* texte foncé sur cream */
+  --ink-soft: #4d3d6b;
+  --ink-muted: #7a6c92;
+  --paper: #fffbf0;
+  --paper-line: #e8d5a8;
+
+  /* === V2/V3 COMPAT — réassignés vers V4 === */
+  --color-bg: var(--bg-deep);                      /* #1a1530 */
+  --color-surface: rgba(42, 33, 71, 0.78);         /* bg-mid alpha */
+  --color-surface-deep: rgba(26, 21, 48, 0.85);
+  --color-surface-card: var(--bg-cream);           /* cartes basculent en cream */
+  --color-border: rgba(38, 26, 61, 0.18);
+  --color-border-hot: rgba(255, 107, 76, 0.45);    /* coral alpha */
+
+  --color-text: var(--paper);                      /* shell sombre = paper */
+  --color-text-strong: #ffffff;
+  --color-text-muted: rgba(255, 251, 240, 0.65);
+  --color-text-faint: rgba(255, 251, 240, 0.45);
+  --color-text-gold: var(--brand-sun);
+
+  --accent: var(--brand-coral);                    /* #ff6b4c */
+  --accent-soft: rgba(255, 107, 76, 0.28);
+  --accent-glow: rgba(255, 107, 76, 0.18);
+  --on-accent: #ffffff;
+
+  /* === V4 BRAND — Candy (jamais fluo) === */
+  --brand-coral: oklch(72% 0.19 28);               /* signature */
+  --brand-mint:  oklch(78% 0.13 165);
+  --brand-sun:   oklch(85% 0.15 85);
+  --brand-sky:   oklch(75% 0.13 230);
+  --brand-grape: oklch(65% 0.18 305);
+
+  /* === STAGES — V4 candy + compat V2/V3 === */
+  /* Stage 1 — Cryptes Froides → ciel pâle givré */
+  --stage-1: oklch(72% 0.13 220);
+  --stage-1-deep: oklch(50% 0.13 230);
+  --stage-1-cream: oklch(95% 0.04 220);
+  /* compat V2/V3 */
+  --stage-1-accent: var(--stage-1);
+  --stage-1-accent-soft: oklch(72% 0.13 220 / 0.28);
+  --stage-1-accent-glow: oklch(72% 0.13 220 / 0.20);
+  --stage-1-accent-deep: var(--stage-1-deep);
+  --stage-1-on-accent: #ffffff;
+
+  /* Stage 2 — Sanctuaire du Vide → crépuscule magique */
+  --stage-2: oklch(70% 0.18 310);
+  --stage-2-deep: oklch(45% 0.18 305);
+  --stage-2-cream: oklch(95% 0.05 310);
+  --stage-2-accent: var(--stage-2);
+  --stage-2-accent-soft: oklch(70% 0.18 310 / 0.30);
+  --stage-2-accent-glow: oklch(70% 0.18 310 / 0.22);
+  --stage-2-accent-deep: var(--stage-2-deep);
+  --stage-2-accent-toxic: var(--poison);
+  --stage-2-on-accent: #ffffff;
+
+  /* Stage 3 — Salle du Roi Brisé → couronnement doré */
+  --stage-3: oklch(74% 0.18 50);
+  --stage-3-deep: oklch(50% 0.19 40);
+  --stage-3-cream: oklch(96% 0.04 70);
+  --stage-3-accent: var(--stage-3);
+  --stage-3-accent-soft: oklch(74% 0.18 50 / 0.30);
+  --stage-3-accent-glow: oklch(74% 0.18 50 / 0.22);
+  --stage-3-accent-deep: var(--stage-3-deep);
+  --stage-3-accent-blood: oklch(55% 0.20 25);
+  --stage-3-on-accent: var(--ink);
+
+  /* === RARETÉS V4 (anglais) === */
+  --rarity-common: #9aa3b2;
+  --rarity-common-deep: #5e6878;
+  --rarity-common-cream: #ecedf0;
+
+  --rarity-rare: #4ec5e8;
+  --rarity-rare-deep: #1f7fa8;
+  --rarity-rare-cream: #e0f4fb;
+
+  --rarity-epic: #b563ff;
+  --rarity-epic-deep: #7a2dd0;
+  --rarity-epic-cream: #f1e3ff;
+
+  --rarity-legendary: #ffb938;
+  --rarity-legendary-deep: #cc7a00;
+  --rarity-legendary-cream: #fff2d1;
+
+  --rarity-mythic: #ff5fa2;          /* ACTIVÉ — visuel candy rose nacré */
+  --rarity-mythic-deep: #b8246a;
+  --rarity-mythic-cream: #ffe1ee;
+
+  /* === RARETÉS V2 (français) — alias vers V4 === */
+  --rarity-commune:    var(--rarity-common);
+  --rarity-rare:       var(--rarity-rare);          /* nom partagé */
+  --rarity-epique:     var(--rarity-epic);
+  --rarity-legendaire: var(--rarity-legendary);
+  --rarity-runique:    var(--rarity-mythic);        /* alias mythic */
+
+  /* === RARETÉS V3 — tokens étendus, valeurs candy === */
+  --rarity-common-border: var(--rarity-common-deep);
+  --rarity-common-bg: var(--rarity-common-cream);
+  --rarity-common-glow: transparent;
+  --rarity-common-text: var(--ink);
+  --rarity-common-particle: transparent;
+
+  --rarity-rare-border: var(--rarity-rare-deep);
+  --rarity-rare-bg: var(--rarity-rare-cream);
+  --rarity-rare-glow: oklch(75% 0.13 220 / 0.35);
+  --rarity-rare-text: var(--rarity-rare-deep);
+  --rarity-rare-particle: var(--rarity-rare);
+
+  --rarity-epic-border: var(--rarity-epic-deep);
+  --rarity-epic-bg: var(--rarity-epic-cream);
+  --rarity-epic-glow: rgba(181, 99, 255, 0.40);
+  --rarity-epic-text: var(--rarity-epic-deep);
+  --rarity-epic-particle: var(--rarity-epic);
+
+  --rarity-legendary-border: var(--rarity-legendary-deep);
+  --rarity-legendary-border-deep: #a45d00;
+  --rarity-legendary-bg: var(--rarity-legendary-cream);
+  --rarity-legendary-glow: rgba(255, 185, 56, 0.55);
+  --rarity-legendary-glow-strong: rgba(255, 185, 56, 0.75);
+  --rarity-legendary-text: var(--rarity-legendary-deep);
+  --rarity-legendary-particle: var(--rarity-legendary);
+  --rarity-legendary-spark: #fff4cc;
+
+  --rarity-mythic-border: var(--rarity-mythic-deep);
+  --rarity-mythic-bg: var(--rarity-mythic-cream);
+  --rarity-mythic-glow: rgba(255, 95, 162, 0.55);
+  --rarity-mythic-text: var(--rarity-mythic-deep);
+  --rarity-mythic-particle: var(--rarity-mythic);
+
+  /* === STATS FONCTIONNELLES (combat) === */
+  --hp-good: oklch(75% 0.18 145);
+  --hp-warn: oklch(80% 0.18 75);
+  --hp-low:  oklch(68% 0.21 25);
+  --shield:  oklch(80% 0.10 220);
+  --mana:    oklch(70% 0.16 270);
+  --rage:    oklch(70% 0.21 35);
+  --poison:  oklch(72% 0.18 140);
+
+  /* === COFFRES — 5 tiers candy === */
+  --chest-wood:   #c0894d;
+  --chest-bronze: #d97a3c;
+  --chest-silver: #b8c4d4;
+  --chest-royal:  #ffc845;
+  --chest-runic:  #5fdfff;
+  /* Compat V2 — chest-damaged → chest-wood */
+  --chest-damaged: var(--chest-wood);
+
+  /* Aura halos coffres */
+  --chest-wood-glow:   rgba(192, 137, 77, 0.45);
+  --chest-bronze-glow: rgba(217, 122, 60, 0.55);
+  --chest-silver-glow: rgba(184, 196, 212, 0.65);
+  --chest-royal-glow:  rgba(255, 200, 69, 0.75);
+  --chest-runic-glow:  rgba(95, 223, 255, 0.80);
+
+  /* === RADIUS === */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+  /* compat V2 */
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-pill: var(--r-pill);
+
+  /* === STROKES (cerne ink chunky) === */
+  --stroke: 3px solid var(--ink);
+  --stroke-thin: 2px solid var(--ink);
+
+  /* === SHADOWS === */
+  /* Sticker shadows : signature DA — offset Y pur, NO blur */
+  --shadow-stick-sm: 0 3px 0 rgba(38, 26, 61, 0.35);
+  --shadow-stick:    0 6px 0 rgba(38, 26, 61, 0.45);
+  --shadow-stick-lg: 0 10px 0 rgba(38, 26, 61, 0.55);
+  --shadow-glow:     0 0 32px;     /* couleur fournie par classe */
+  --shadow-soft:     0 8px 22px rgba(0, 0, 0, 0.18);
+  /* compat V2 */
+  --shadow-card: var(--shadow-soft);
+  --shadow-deep: var(--shadow-stick-lg);
+  --shadow-hot:  0 14px 32px rgba(255, 107, 76, 0.34);
+
+  /* === SPACE === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+
+  /* === FONTS === */
+  --font-display: 'Lilita One', 'Fredoka', 'Baloo 2', system-ui, sans-serif;
+  --font-body:    'Nunito', 'Quicksand', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* === DURATIONS / EASES (V3 conservées) === */
+  --combat-speed: 1;
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+  --dur-narr: 600ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-impact: cubic-bezier(.18,.7,.32,1);
+  --ease-projectile: cubic-bezier(.42,0,.58,1);
+  --ease-floating: cubic-bezier(.22,1,.36,1);
+  --ease-roulette: cubic-bezier(.12,.85,.25,1);
+  --ease-boss-mount: cubic-bezier(.16,1.04,.3,1);
+
+  /* === V3 ANIMATION DURATIONS — conservées (durées inchangées, keyframes derrière changent) === */
+  --anim-attack-pulse: 450ms;            /* upgradé : était 220ms, V4 chero-attack 0.45s */
+  --anim-attack-pulse-special: 520ms;
+  --anim-projectile-physical: 500ms;
+  --anim-projectile-magic: 520ms;
+  --anim-projectile-heal: 600ms;
+  --anim-projectile-shield: 480ms;
+  --anim-projectile-poison: 600ms;
+  --anim-impact-flash: 90ms;
+  --anim-impact-flash-dark: 120ms;
+  --anim-impact-flash-shield: 100ms;
+  --anim-impact-shake-enemy: 180ms;
+  --anim-impact-shake-ally: 180ms;
+  --anim-floating-rise: 1600ms;          /* fnum-rise 1.6s */
+  --anim-aura-low-pulse: 2000ms;
+  --anim-boss-card-vibrate: 1200ms;
+  --anim-lootbox-shake: 320ms;
+  --anim-lootbox-roulette: 2700ms;       /* DA spec */
+  --anim-rarity-flash-common: 220ms;
+  --anim-rarity-flash-rare: 280ms;
+  --anim-rarity-flash-epic: 380ms;
+  --anim-rarity-flash-legendary: 600ms;
+  --anim-rarity-flash-mythic: 900ms;
+  --anim-boss-intro-total: 1600ms;
+  --anim-chest-shake: 320ms;
+  --anim-chest-lid-open: 700ms;          /* DA spec */
+  --anim-chest-beam: 1200ms;             /* chest-burst */
+
+  /* === FNUM — Lilita One stroke ink === */
+  --fnum-size-base: 22px;
+  --fnum-size-special: 26px;
+  --fnum-size-crit: 32px;
+  --fnum-weight: 400;
+  --fnum-font: var(--font-display);
+}
+
+/* === Combat speed scaling (V3 conservé) === */
+.combat-screen           { --combat-speed: 1; }
+.combat-screen.speed-125 { --combat-speed: 1.25; }
+.combat-screen.speed-150 { --combat-speed: 1.5; }
+
+/* === Stage scoping (V3 conservé) === */
+.app-shell.stage-1, .hub-screen.stage-1, .stage-intro.stage-1,
+.combat-screen.stage-1 {
+  --stage-accent: var(--stage-1-accent);
+  --stage-accent-soft: var(--stage-1-accent-soft);
+  --stage-accent-glow: var(--stage-1-accent-glow);
+  --stage-accent-deep: var(--stage-1-accent-deep);
+  --stage-on-accent: var(--stage-1-on-accent);
+  --stage-cream: var(--stage-1-cream);
+}
+.app-shell.stage-2, .hub-screen.stage-2, .stage-intro.stage-2,
+.combat-screen.stage-2 {
+  --stage-accent: var(--stage-2-accent);
+  --stage-accent-soft: var(--stage-2-accent-soft);
+  --stage-accent-glow: var(--stage-2-accent-glow);
+  --stage-accent-deep: var(--stage-2-accent-deep);
+  --stage-on-accent: var(--stage-2-on-accent);
+  --stage-cream: var(--stage-2-cream);
+}
+.app-shell.stage-3, .hub-screen.stage-3, .stage-intro.stage-3,
+.combat-screen.stage-3 {
+  --stage-accent: var(--stage-3-accent);
+  --stage-accent-soft: var(--stage-3-accent-soft);
+  --stage-accent-glow: var(--stage-3-accent-glow);
+  --stage-accent-deep: var(--stage-3-accent-deep);
+  --stage-on-accent: var(--stage-3-on-accent);
+  --stage-cream: var(--stage-3-cream);
+}
+
+/* === Rarity scoping — pose --rcolor / --rcream / --rdeep / --rblur === */
+.rarity-common,    .rarity-commune {
+  --rcolor: var(--rarity-common);
+  --rdeep:  var(--rarity-common-deep);
+  --rcream: var(--rarity-common-cream);
+  --rblur:  0px;
+}
+.rarity-rare {
+  --rcolor: var(--rarity-rare);
+  --rdeep:  var(--rarity-rare-deep);
+  --rcream: var(--rarity-rare-cream);
+  --rblur:  2px;
+}
+.rarity-epic, .rarity-epique {
+  --rcolor: var(--rarity-epic);
+  --rdeep:  var(--rarity-epic-deep);
+  --rcream: var(--rarity-epic-cream);
+  --rblur:  3px;
+}
+.rarity-legendary, .rarity-legendaire {
+  --rcolor: var(--rarity-legendary);
+  --rdeep:  var(--rarity-legendary-deep);
+  --rcream: var(--rarity-legendary-cream);
+  --rblur:  4px;
+}
+.rarity-mythic, .rarity-runique {
+  --rcolor: var(--rarity-mythic);
+  --rdeep:  var(--rarity-mythic-deep);
+  --rcream: var(--rarity-mythic-cream);
+  --rblur:  6px;
+}
+
+/* === Body / app-shell — bascule fond V4 === */
+html, body, #root {
+  background: var(--bg-deep);
+  color: var(--paper);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Skyboxes utilitaires (utilisées par .combat-screen, .hub-screen, .stage-intro-screen via classe combinée) === */
+.bg-sky-day {
+  background:
+    radial-gradient(ellipse 600px 280px at 30% 18%, rgba(255,255,255,0.7), transparent 70%),
+    radial-gradient(ellipse 500px 240px at 80% 28%, rgba(255,255,255,0.4), transparent 70%),
+    linear-gradient(180deg, #b8e3ff 0%, #ffd6c2 100%);
+}
+.bg-sky-dusk-magic {
+  background:
+    radial-gradient(circle 200px at 70% 30%, rgba(255,200,140,0.5), transparent 70%),
+    linear-gradient(180deg, #6a4ca0 0%, #ff8b6f 50%, #ffd47a 100%);
+}
+.bg-sky-dusk-royal {
+  background:
+    radial-gradient(circle 240px at 50% 25%, rgba(255,220,150,0.6), transparent 70%),
+    linear-gradient(180deg, #d97a3c 0%, #ffc845 60%, #fff5e1 100%);
+}
+.bg-night {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 0 1px, transparent 1px),
+    radial-gradient(circle at 60% 70%, rgba(255,255,255,0.05) 0 1px, transparent 1px),
+    radial-gradient(circle at 85% 25%, rgba(255,255,255,0.07) 0 1px, transparent 1px),
+    radial-gradient(circle at 35% 80%, rgba(255,255,255,0.05) 0 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, #3a2f5e, #1a1530);
+}
+
+/* === Atomes utilitaires === */
+.sticker-shadow    { box-shadow: var(--shadow-stick); }
+.sticker-shadow-sm { box-shadow: var(--shadow-stick-sm); }
+.sticker-shadow-lg { box-shadow: var(--shadow-stick-lg); }
+.ink-stroke        { border: var(--stroke); }
+.ink-stroke-thin   { border: var(--stroke-thin); }
+
+/* === Pill atom === */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-display);
+  font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;
+  background: var(--paper); color: var(--ink);
+  border: var(--stroke-thin); border-radius: var(--r-pill);
+  padding: 4px 10px;
+  box-shadow: var(--shadow-stick-sm);
+}
+
+/* === Btn atom + variants === */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--ink); background: var(--paper);
+  border: var(--stroke); border-radius: var(--r-md);
+  padding: 12px 22px;
+  box-shadow: var(--shadow-stick);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.btn:hover  { transform: translateY(-2px); box-shadow: var(--shadow-stick-lg); }
+.btn:active { transform: translateY(3px);  box-shadow: var(--shadow-stick-sm); }
+.btn:focus-visible { outline: 3px solid var(--brand-sky); outline-offset: 3px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: var(--shadow-stick-sm); }
+
+.btn--primary { background: var(--brand-coral); color: white; }
+.btn--gold    { background: var(--brand-sun); }
+.btn--mint    { background: var(--brand-mint);  color: white; }
+.btn--grape   { background: var(--brand-grape); color: white; }
+.btn--ghost   { background: transparent; box-shadow: none; }
+
+/* === Reduced motion — bloc DA conservé étendu === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

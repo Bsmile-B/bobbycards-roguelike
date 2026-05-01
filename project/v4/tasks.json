@@ -1,0 +1,419 @@
+[
+  {
+    "id": "V4-T1",
+    "title": "Phase A — index.html : import Google Fonts (Lilita One + Nunito + JetBrains Mono) avec preconnect + font-display swap",
+    "owner_role": "frontend-dev",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "index.html contient les 2 link preconnect + 1 link stylesheet Google Fonts. La balise html lang=fr est conservée. npm run build passe."
+  },
+  {
+    "id": "V4-T2",
+    "title": "Phase A — :root migration tokens : valeurs candy + ajout des nouveaux tokens (bg/ink/paper/brand/raritys candy/chests candy/sticker shadows/font-display)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T1"
+    ],
+    "status": "done",
+    "acceptance": "src/styles.css :root contient tous les tokens listés en specs §5.a (anciens conservés en nom + nouvelles valeurs ; nouveaux ajoutés). Aucun token V2/V3 supprimé sans justification documentée."
+  },
+  {
+    "id": "V4-T3",
+    "title": "Phase A — body / #root / .app-shell : background var(--bg-deep), font-family var(--font-body), color var(--paper) ou var(--ink) selon contexte",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "Build clean. Au démarrage de npm run dev, le menu apparaît sur fond #1a1530 avec polices Lilita One / Nunito chargées. Pas de FOUT au-delà de 200ms."
+  },
+  {
+    "id": "V4-T4",
+    "title": "Phase B — Composant React <HeroMascot> dans App.tsx : interface (variant/size/mood/className/style), DOM commun, lookup variants",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "App.tsx définit HeroMascot avec les 16 variants spec §5.c, 5 sizes, 6 moods. Compile en strict mode. Aucun any. Composant est une pure fonction sans state."
+  },
+  {
+    "id": "V4-T5",
+    "title": "Phase B — CSS pour HeroMascot : structure DOM commune (head/eyes/cheek/mouth/hat/cape) + 16 variants via data-mascot-variant + CSS variables override",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T4"
+    ],
+    "status": "done",
+    "acceptance": "src/styles.css contient .hero-mascot* avec les 16 variants distincts visuellement. Sizes xs/sm/md/lg/xl produisent des dimensions différentes. Mood KO grise et baisse les yeux. Mood attacking penche la tête. Mood hurt secoue."
+  },
+  {
+    "id": "V4-T6",
+    "title": "Phase B — CharacterCardDetailed refonte CSS : double inset rarity + cerne ink + sticker shadow + radius xl + portrait cream + name Lilita One",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "Classe .character-card-detailed est refondue selon specs §4 phase B. Halo radial extérieur posé. Le DOM existant côté React reste compatible (pas de breaking change)."
+  },
+  {
+    "id": "V4-T7",
+    "title": "Phase B — CharacterCardDetailed React : intégrer <HeroMascot variant=... size='lg' /> dans le portrait à la place du SVG runique",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T4",
+      "V4-T6"
+    ],
+    "status": "done",
+    "acceptance": "CharacterCardDetailed appelle HeroMascot avec mapping perso → variant (specs §5.d). Custom characters utilisent variant bobby. Aucune régression visuelle de structure."
+  },
+  {
+    "id": "V4-T8",
+    "title": "Phase B — Idle animations par rareté : keyframes shimmer-x, pulse-halo, breathe, wobble + classes .rarity-{rare|epic|legendary|mythic}",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T6"
+    ],
+    "status": "done",
+    "acceptance": "5 raretés visuellement distinctes au repos. Mythic activée (rose nacré + wobble + sparkles). Cap 2 sparkles par carte mythic respecté. Reduced-motion désactive toutes ces anims."
+  },
+  {
+    "id": "V4-T9",
+    "title": "Phase B — RarityReveal V4 : keyframes reveal-{common|rare|epic|legendary|mythic} candy + sparkles burst",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T8"
+    ],
+    "status": "done",
+    "acceptance": "RarityReveal rend la rareté révélée avec un effet candy distinct. Légendaire shake écran ±2px sur 180ms (déjà V3). Mythic ajoute aura rose."
+  },
+  {
+    "id": "V4-T10",
+    "title": "Phase C — CombatHero refonte CSS : cerne ink + sticker shadow + cream gradient + mini-mascotte 50px (HeroMascot sm)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T5"
+    ],
+    "status": "done",
+    "acceptance": ".combat-hero refondu. Float-y idle 3s. Désactivé sur is-ko. Barre HP en pill cream avec cerne ink. Nom Lilita One."
+  },
+  {
+    "id": "V4-T11",
+    "title": "Phase C — CombatHero React : intégrer <HeroMascot size='sm' mood=... /> ; calcul mood depuis hp et anim state",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T4",
+      "V4-T10"
+    ],
+    "status": "done",
+    "acceptance": "Mood = 'ko' si hp<=0 ; 'hurt' si hpPct<30% ; 'attacking' si is-attacking ; 'idle' sinon. Compile clean."
+  },
+  {
+    "id": "V4-T12",
+    "title": "Phase C — EnemyCard refonte CSS + React : mascottes par stage + stage accent + boss scale 1.4 + halo mythic boss",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T5"
+    ],
+    "status": "done",
+    "acceptance": ".enemy-card refondu, .enemy-card--boss avec scale + halo. Mascottes ennemis distinguent stage 1/2/3 (specs §5.e)."
+  },
+  {
+    "id": "V4-T13",
+    "title": "Phase C — EnemyCard React : ajouter mascot: MascotVariant sur Enemy + dérivation depuis name dans createEnemy",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T4",
+      "V4-T12"
+    ],
+    "status": "done",
+    "acceptance": "Type Enemy étendu sans casser le reducer. createEnemy assigne le variant. Aucun field save touché."
+  },
+  {
+    "id": "V4-T14",
+    "title": "Phase C — BossHpBar refonte : fond ink-violet + nom mythic glow + barre dégradé mythic→coral",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": ".boss-hp-bar refondu. Lilita One + text-shadow rose mythic. Barre 8px haut, sticker shadow."
+  },
+  {
+    "id": "V4-T15",
+    "title": "Phase C — RunProgress refonte : fond paper + dots stage-color + dot courant coral pulsant + dots boss carrés or",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": ".run-progress refondu. 30 dots (3 stages × 10 waves) lisibles à 1280px. Boss done = carré or avec couronne emoji."
+  },
+  {
+    "id": "V4-T16",
+    "title": "Phase C — Skyboxes par stage : .bg-sky-day / .bg-sky-dusk-magic / .bg-sky-dusk-royal + classe modifier .combat-screen--stage-{N}",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "Combat stage 1 = ciel bleu pâle ; stage 2 = crépuscule violet ; stage 3 = doré chaud. Visible derrière la combat-screen."
+  },
+  {
+    "id": "V4-T17",
+    "title": "Phase C — Animations attaque chero-attack / enemy-attack / chero-attack-special : keyframes + classe is-attacking",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T10"
+    ],
+    "status": "done",
+    "acceptance": "Héros translate(20px,-10px) rotate(4deg) sur 0.45s. Symétrique ennemi. Special amplifié. Cohérent avec V3 computeCardAnimState."
+  },
+  {
+    "id": "V4-T18",
+    "title": "Phase C — Floating numbers fnum-rise + Lilita One stroke ink + parts groupés (déjà V3.1)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "Keyframe fnum-rise 1.6s. Texte Lilita One avec text-stroke 1px ink + text-shadow 0 2px 0 ink50. Variants damage/heal/shield/poison/burn/crit gardent leurs couleurs V3."
+  },
+  {
+    "id": "V4-T19",
+    "title": "Phase C — Projectile / FNum / Skill cards / Speed selector / Resource pills / Stage pill / Consumable slots — re-skin candy",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "Toutes les classes UI combat secondaires (.projectile, .skill-card, .combat-speed, .cres, .combat-stage-pill, .cons) ont reçu cerne ink + sticker shadow + Lilita One pour titres."
+  },
+  {
+    "id": "V4-T20",
+    "title": "Phase C — BossIntroOverlay refonte : carte cream chunky + nom Lilita One mythic + mascotte boss xl + skybox stage",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T5",
+      "V4-T16"
+    ],
+    "status": "done",
+    "acceptance": "BossIntroOverlay rend la mascotte boss en xl avec halo mythic. Phrase d'ambiance V3 conservée. Auto-dismiss 1600ms (800ms reduced-motion) inchangé."
+  },
+  {
+    "id": "V4-T21",
+    "title": "Phase D — FinalChest refonte CSS : 5 tiers candy (damaged/bronze/silver/royal/runic) + lid + body + studs + aura + chest-burst",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "5 tiers visuellement distincts. Aura radial colorée selon tier. Lid avec keyhole + studs. Body avec lock. Animation idle (float-y + pulse aura selon tier). Reduced-motion = aura statique."
+  },
+  {
+    "id": "V4-T22",
+    "title": "Phase D — FinalChest animation d'ouverture : lid rotateX(-100deg) 700ms + chest-burst radial scaleY 0.4→2.4 + flash blanc",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T21"
+    ],
+    "status": "done",
+    "acceptance": "Phases idle → shake → opening → beam → reveal (déjà V3.1) gardées. Skin candy : flash blanc + burst radial coloré tier. Reduced-motion = idle → reveal direct."
+  },
+  {
+    "id": "V4-T23",
+    "title": "Phase D — LootRoulette refonte : frame paper-line + marker coral pointu + fade lateral + items 110px (mini-mascotte 56×56)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T5"
+    ],
+    "status": "done",
+    "acceptance": ".rou refondu selon specs §4 phase D. Marker coral central avec triangles. Fade gauche/droite 80px. Items mascotte mini + name Lilita One."
+  },
+  {
+    "id": "V4-T24",
+    "title": "Phase D — LootRoulette / LootboxScreen : statut --default ink-soft / --spin grape / --done legendary-deep glow + transition V4 candy",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T23"
+    ],
+    "status": "done",
+    "acceptance": ".rou-status candy. .lootbox-screen refondu (cream sticker bg). Animation phases V3 (idle/shake/roulette/reveal/opened) intactes."
+  },
+  {
+    "id": "V4-T25",
+    "title": "Phase E — HubScreen refonte : skybox stage-appropriée + container cream sticker + header pill cream + ressources pill white",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T16"
+    ],
+    "status": "done",
+    "acceptance": "HubScreen montre skybox derrière. Header pill grape. Ressources or/fragments en pills white avec icônes cercles colorés."
+  },
+  {
+    "id": "V4-T26",
+    "title": "Phase E — HubTabs : 5 onglets pill, active = coral sticker. ShopTab + LootboxTab + RecycleTab + TeamTab + StatsTab refonte cards cream",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T25"
+    ],
+    "status": "done",
+    "acceptance": ".hub-tabs candy. Tab active coral. Chaque sous-tab refondu en cards cream sticker."
+  },
+  {
+    "id": "V4-T27",
+    "title": "Phase E — Boutons globaux .btn variants (primary coral / gold sun / mint / grape / ghost) + states hover translateY(-2px) / active translateY(3px)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T2"
+    ],
+    "status": "done",
+    "acceptance": "5 variants de boutons disponibles. Lilita One 18px uppercase. Sticker shadow. Hover/active states fluides. Réutilisables dans toutes les modales."
+  },
+  {
+    "id": "V4-T28",
+    "title": "Phase E — TeamTab : grille mascottes lg (HeroMascot) + indicateur swap gratuit/payant pill",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T4",
+      "V4-T26"
+    ],
+    "status": "done",
+    "acceptance": "TeamTab rend chaque héros via CharacterCardDetailed sm + mascotte lg. Indicateur swap gratuit/payant en pill coral/grape."
+  },
+  {
+    "id": "V4-T29",
+    "title": "Phase E — RecycleConfirmModal + ReplaceConsumableModal : re-skin cream sticker + boutons primary/ghost",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T27"
+    ],
+    "status": "done",
+    "acceptance": "Les 2 modales ont DOM inchangé mais skin candy. Cerne ink + sticker shadow + boutons coral/ghost. Focus trap V2 préservé."
+  },
+  {
+    "id": "V4-T30",
+    "title": "Phase E — StageIntroScreen refonte : container cream sticker + nom stage Lilita One + accent stage + bouton primary coral pour entrer",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T25"
+    ],
+    "status": "done",
+    "acceptance": "StageIntroScreen candy. Bouton #stage-intro-enter conservé."
+  },
+  {
+    "id": "V4-T31",
+    "title": "Audit transversal — reduced-motion : étendre @media (prefers-reduced-motion: reduce) pour couvrir mascottes, float-y, skyboxes, sparkles, mythic wobble",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V4-T8",
+      "V4-T10",
+      "V4-T16",
+      "V4-T21"
+    ],
+    "status": "done",
+    "acceptance": "Bloc reduced-motion étendu (ou règle globale * { animation: none; transition: none; } scoping). Test DevTools Rendering: prefers-reduced-motion = reduce → tout statique sauf alternatives opacity/outline."
+  },
+  {
+    "id": "V4-T32",
+    "title": "Audit transversal — grep régressions : recherche d'usages de --color-bg / --color-text-strong qui devraient être migrés vers --bg-deep / --ink",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T26"
+    ],
+    "status": "done",
+    "acceptance": "Grep dans styles.css. Toute classe ciblée par le brief V4 utilise les nouveaux tokens. Les utilitaires V1 résiduels (Menu / Atelier / écrans non listés) sont vérifiés. Aucun écran ne reste 'sombre runique'."
+  },
+  {
+    "id": "V4-T33",
+    "title": "Build + smoke test golden path Playwright : Menu → Sélection → Stage 1 → Boss 1 → Hub → Shop → Lootbox → Recycle → Stage 2 → … → Game over → Coffre",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T31",
+      "V4-T32"
+    ],
+    "status": "done",
+    "acceptance": "npm run build pass. test-actions/start-combat.json + reward-next.json + chest.json passent sans modification. Aucun ID Playwright cassé. localStorage save V3 lue sans erreur."
+  },
+  {
+    "id": "V4-T34",
+    "title": "Major M1 — Boutons .primary-action : override candy coral (sticker shadow + Lilita One + cerne ink) en fin de styles.css",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T33"
+    ],
+    "status": "done",
+    "acceptance": "Tous les CTA du jeu (Entrer stage, Continuer hub, Ouvrir le coffre, boss-relic-card cta, primary-action des modales) affichent fond coral + cerne ink + sticker shadow + Lilita One uppercase + hover translateY(-2px) / active translateY(3px). Disabled garde l'état lisible. Aucun bouton ne reste sur le gradient rouge V1 (#8f2632→#5f1925)."
+  },
+  {
+    "id": "V4-T35",
+    "title": "Major M2 — Hub tab active candy : aligner .hub-tab--active sur le style coral V4",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": ".hub-tab--active reçoit fond var(--brand-coral) + color white + sticker shadow. Les 5 onglets visuellement cohérents au survol et à l'état actif. Pas de changement de DOM."
+  },
+  {
+    "id": "V4-T36",
+    "title": "Major M3 — FinalChest : refondre le DOM React pour émettre la composition candy (lid + body + studs + lock + keyhole + band + runes runic + burst overlay)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": "FinalChest rend .chest__body (avec .chest__band + .chest__lock), .chest__lid (avec .chest__lid-band + .chest__keyhole + 3 .chest__stud--{l,c,r}), 3 .chest__rune--{1,2,3} si tier=runic, et .chest__burst overlay sur opening. id=open-chest préservé. ChestPhase idle→shake→opening (lid rotateX -100deg)→beam→reveal conservée. Reduced-motion shortcut idle→reveal préservé."
+  },
+  {
+    "id": "V4-T37",
+    "title": "Major M4 — Floating numbers : override .floating-num avec font-display + text-stroke ink + animation fnum-rise",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": ".floating-num reçoit font-family var(--font-display), -webkit-text-stroke 1px var(--ink), text-shadow 0 2px 0 rgba(38,26,61,0.5), animation fnum-rise 1.6s. Variants damage-physical/magic/heal/shield/poison/burn/crit conservent leurs couleurs V3 (ou candy si reflètent les nouveaux tokens hp-good/shield/mana/poison). Reduced-motion désactive l'animation."
+  },
+  {
+    "id": "V4-T38",
+    "title": "Major M5 — RunProgress : refondre le React pour émettre 30 .run-progress__dot candy (stage color + current coral pulsant + boss carrés or done)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": "RunProgress rend une grille de 30 dots (3 stages × 10 waves), classes .run-progress__dot + .is-stage-{N} + .is-current (coral pulsant) + .is-boss (carré or quand done) + .is-done. id=run-progress préservé. Lisibilité 1280×720 OK."
+  },
+  {
+    "id": "V4-T39",
+    "title": "Major M6 — Combat footer : overrides candy pour .special-button / .consumable-slot / .speed-selector / .intent-banner (cerne ink + sticker shadow + Lilita One titres)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": "Les 4 atomes combat conservent leur classe V2/V3 mais reçoivent skin candy (cerne ink + sticker shadow + paper bg + Lilita One pour les titres/labels). Disabled state lisible. Speed selector active = coral. Pas de modification de DOM React."
+  },
+  {
+    "id": "V4-T40",
+    "title": "Major M7 — Modales (recycle-confirm + replace-consumable) : overrides cream sticker chunky candy",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": "Les 2 modales reçoivent fond var(--bg-cream), color var(--ink), border var(--stroke), border-radius var(--r-xl), box-shadow var(--shadow-stick-lg). Titre Lilita One. Bouton primary candy via T34. Bouton ghost (cancel) en variant ghost. Focus trap V2 préservé."
+  },
+  {
+    "id": "V4-T41",
+    "title": "Major M8 — BossHpBar : compléter le DOM React (boss-hp-bar__name + boss-hp-bar__track) pour activer le rendu candy mythic",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V4-T34"
+    ],
+    "status": "done",
+    "acceptance": "EnemyCard pour boss émet .boss-hp-bar > .boss-hp-bar__name (Lilita One mythic glow) + .boss-hp-bar__track > .boss-hp-bar__fill + .boss-hp-bar__shimmer. Pas de changement de logique combat (juste DOM décoratif)."
+  }
+]

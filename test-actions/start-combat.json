@@ -1,0 +1,25 @@
+{
+  "description": "Lance la run depuis l'ecran team puis enchaine sur le clic 'Entrer' du stage-intro pour arriver en combat. Met a jour le flux V2 team-select -> stage-intro -> combat.",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "mouse_x": 160,
+      "mouse_y": 494,
+      "selector": "#team-start"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#stage-intro-enter"
+    },
+    {
+      "buttons": [],
+      "frames": 120
+    }
+  ]
+}

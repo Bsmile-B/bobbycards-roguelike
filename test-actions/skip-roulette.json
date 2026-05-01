@@ -1,0 +1,31 @@
+{
+  "description": "Ouvre une lootbox et appelle window.__game_test_skip_roulette() pour bypasser l'animation. V3-T19 + T29.",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#lootbox-open"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "evaluate": "window.__game_test_skip_roulette && window.__game_test_skip_roulette()",
+      "frames": 4
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#lootbox-close"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Click the 'Entrer' button on the stage-intro screen to start the stage.",
+  "target": "#stage-intro-enter",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#stage-intro-enter"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

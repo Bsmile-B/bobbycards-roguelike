@@ -1,0 +1,24 @@
+{
+  "description": "Buy a small lootbox from the hub.",
+  "target": "#lootbox-buy-small",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-tab-lootbox"
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    },
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#lootbox-buy-small"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

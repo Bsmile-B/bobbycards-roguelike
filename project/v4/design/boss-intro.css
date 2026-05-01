@@ -1,0 +1,113 @@
+/* ============================================================
+   V4 — Boss Intro Overlay
+   Hybrid candy/dark : darken ink-violet 70% + nom Lilita One
+   stroke ink + glow rareté boss + accent stage.
+   ============================================================ */
+
+.boss-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(38, 26, 61, 0.72);
+  backdrop-filter: blur(4px);
+  animation: boss-intro-fade 1600ms var(--ease-boss-mount) forwards;
+  color: var(--paper);
+}
+
+.boss-intro-overlay__mascot {
+  /* HeroMascot xl wrappé dans un halo dynamique */
+  position: relative;
+  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.40));
+}
+.boss-intro-overlay__mascot::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--stage-accent, var(--rarity-mythic)), transparent 60%);
+  opacity: 0.45;
+  filter: blur(8px);
+  z-index: -1;
+  animation: pulse-halo 2s ease-in-out infinite;
+}
+
+.boss-intro-overlay__name {
+  font-family: var(--font-display);
+  font-size: 56px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--rarity-mythic);
+  -webkit-text-stroke: 2px var(--ink);
+  text-shadow:
+    0 0 24px var(--rarity-mythic),
+    0 4px 0 var(--ink),
+    0 8px 12px rgba(0, 0, 0, 0.50);
+  text-align: center;
+  margin: 0;
+  animation: boss-intro-name 1600ms var(--ease-boss-mount) forwards;
+}
+
+.boss-intro-overlay__phrase {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--bg-cream);
+  text-align: center;
+  max-width: 600px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  margin: 0;
+  padding: 0 20px;
+  animation: boss-intro-phrase 1600ms 400ms var(--ease-out) backwards;
+}
+
+/* Stage tinting */
+.boss-intro-overlay.stage-1 { background: rgba(38, 26, 61, 0.72); }
+.boss-intro-overlay.stage-2 { background: linear-gradient(180deg, rgba(38, 26, 61, 0.85), rgba(122, 45, 208, 0.55)); }
+.boss-intro-overlay.stage-3 { background: linear-gradient(180deg, rgba(38, 26, 61, 0.85), rgba(204, 122, 0, 0.55)); }
+
+/* ============================================================
+   KEYFRAMES boss intro
+   ============================================================ */
+@keyframes boss-intro-fade {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+@keyframes boss-intro-name {
+  0%   { transform: scale(0.5); opacity: 0; }
+  30%  { transform: scale(1.1); opacity: 1; }
+  50%  { transform: scale(1); }
+  85%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+@keyframes boss-intro-phrase {
+  0%   { transform: translateY(20px); opacity: 0; }
+  30%  { transform: translateY(0); opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================================================
+   Reduced motion : bandeau statique 800ms
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .boss-intro-overlay {
+    animation: boss-intro-static 800ms linear forwards;
+  }
+  .boss-intro-overlay__mascot::before,
+  .boss-intro-overlay__name,
+  .boss-intro-overlay__phrase {
+    animation: none !important;
+  }
+  @keyframes boss-intro-static {
+    0%   { opacity: 0; }
+    25%  { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+}

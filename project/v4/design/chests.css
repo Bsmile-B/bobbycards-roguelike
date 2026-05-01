@@ -1,0 +1,333 @@
+/* ============================================================
+   V4 — Coffres + Roulette
+   ============================================================ */
+
+/* ----- Container .chest ----- */
+.chest {
+  position: relative;
+  width: 110px;
+  height: 92px;
+  margin: 16px auto;
+}
+/* Aura radial extérieur */
+.chest::before {
+  content: '';
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cglow, transparent), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+/* Shadow ellipse au sol */
+.chest::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 8px;
+  background: rgba(38, 26, 61, 0.30);
+  border-radius: 50%;
+  filter: blur(2px);
+  z-index: -1;
+}
+
+/* ----- Body (60px + lid 38px) ----- */
+.chest__body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: var(--ctier, var(--chest-wood));
+  border: var(--stroke);
+  border-radius: 4px 4px 8px 8px;
+  box-shadow: var(--shadow-stick-sm);
+  animation: float-y 4s ease-in-out infinite;
+}
+.chest__band {
+  position: absolute;
+  top: 50%;
+  left: -3px; right: -3px;
+  transform: translateY(-50%);
+  height: 8px;
+  background: var(--cdeep, oklch(40% 0.10 60));
+  border: 2px solid var(--ink);
+}
+.chest__lock {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 18px;
+  background: var(--brand-sun);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: inset 0 -3px 0 rgba(38, 26, 61, 0.35);
+}
+
+/* ----- Lid ----- */
+.chest__lid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  background: var(--ctier, var(--chest-wood));
+  border: var(--stroke);
+  border-radius: 22px 22px 4px 4px;
+  transform-origin: bottom;
+  transition: transform 700ms var(--ease-impact);
+}
+.chest__lid-band {
+  position: absolute;
+  bottom: 0;
+  left: -3px; right: -3px;
+  height: 8px;
+  background: var(--cdeep, oklch(40% 0.10 60));
+  border: 2px solid var(--ink);
+}
+.chest__keyhole {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px; height: 12px;
+  background: var(--ink);
+  border-radius: 50% 50% 0 0;
+}
+.chest__stud {
+  position: absolute;
+  top: 4px;
+  width: 6px; height: 6px;
+  background: var(--brand-sun);
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+}
+.chest__stud--l { left: 8px; }
+.chest__stud--c { left: 50%; transform: translateX(-50%); }
+.chest__stud--r { right: 8px; }
+
+/* ----- Tiers ----- */
+.chest--damaged, .chest-tier--damaged {
+  --ctier: var(--chest-wood);
+  --cdeep: #6b3f1a;
+  --cglow: transparent;
+}
+.chest--damaged .chest__body { animation: none; transform: rotate(-3deg); }
+
+.chest--bronze, .chest-tier--bronze {
+  --ctier: var(--chest-bronze);
+  --cdeep: #8a3f15;
+  --cglow: var(--chest-bronze-glow);
+}
+.chest--bronze::before { animation: pulse-halo 4s ease-in-out infinite; }
+
+.chest--silver, .chest-tier--silver {
+  --ctier: var(--chest-silver);
+  --cdeep: #6b7884;
+  --cglow: var(--chest-silver-glow);
+}
+.chest--silver::before { animation: pulse-halo 4s ease-in-out infinite; }
+
+.chest--royal, .chest-tier--royal {
+  --ctier: var(--chest-royal);
+  --cdeep: var(--rarity-legendary-deep);
+  --cglow: var(--chest-royal-glow);
+}
+.chest--royal::before { animation: pulse-halo 3s ease-in-out infinite; }
+
+.chest--runic, .chest-tier--runic {
+  --ctier: var(--chest-runic);
+  --cdeep: oklch(45% 0.15 220);
+  --cglow: var(--chest-runic-glow);
+}
+.chest--runic::before { animation: pulse-halo 3s ease-in-out infinite; }
+.chest--runic .chest__rune {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: var(--chest-runic);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--chest-runic);
+  animation: pulse-halo 3s ease-in-out infinite;
+}
+.chest--runic .chest__rune--1 { top: -6px; left: 6px;   animation-delay: 0s;   }
+.chest--runic .chest__rune--2 { top: -10px; left: 50%; transform: translateX(-50%); animation-delay: 0.4s; }
+.chest--runic .chest__rune--3 { top: -6px; right: 6px;  animation-delay: 0.8s; }
+
+/* ----- Opening state ----- */
+.chest.is-opening .chest__lid {
+  transform: rotateX(-100deg);
+}
+.chest__burst {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, white 0%, var(--cglow) 35%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: center bottom;
+  z-index: 5;
+}
+.chest.is-opening .chest__burst {
+  animation: chest-burst 1200ms var(--ease-impact) forwards;
+}
+
+/* ============================================================
+   ROULETTE
+   ============================================================ */
+.loot-roulette,
+.rou {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  background:
+    linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-cream-deep) 100%);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-stick);
+}
+
+/* Marker central */
+.rou__marker {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  background: var(--brand-coral);
+  box-shadow: 0 0 12px var(--brand-coral);
+  z-index: 4;
+  pointer-events: none;
+}
+.rou__marker::before,
+.rou__marker::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+.rou__marker::before {
+  top: -10px;
+  border-top: 10px solid var(--brand-coral);
+}
+.rou__marker::after {
+  bottom: -10px;
+  border-bottom: 10px solid var(--brand-coral);
+}
+
+/* Fade gauche / droite */
+.rou__fade-l,
+.rou__fade-r {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  pointer-events: none;
+  z-index: 3;
+}
+.rou__fade-l { left: 0;  background: linear-gradient(90deg, var(--bg-cream), transparent); }
+.rou__fade-r { right: 0; background: linear-gradient(-90deg, var(--bg-cream), transparent); }
+
+/* Strip */
+.rou__strip,
+.loot-roulette__strip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 12px;
+  transition: transform 2700ms var(--ease-roulette);
+  will-change: transform;
+}
+
+/* Items */
+.rou__item,
+.loot-roulette__item {
+  flex-shrink: 0;
+  width: 110px;
+  padding: 8px;
+  background: var(--rcream, var(--rarity-common-cream));
+  border: 2.5px solid var(--ink);
+  border-radius: var(--r-md);
+  text-align: center;
+  box-shadow: var(--shadow-stick-sm);
+}
+.rou__item.rarity-rare,       .loot-roulette__item.rarity-rare       { border-color: var(--rarity-rare-deep); }
+.rou__item.rarity-epic,       .loot-roulette__item.rarity-epic,
+.rou__item.rarity-epique,     .loot-roulette__item.rarity-epique     { border-color: var(--rarity-epic-deep); }
+.rou__item.rarity-legendary,  .loot-roulette__item.rarity-legendary,
+.rou__item.rarity-legendaire, .loot-roulette__item.rarity-legendaire { border-color: var(--rarity-legendary-deep); }
+.rou__item.rarity-mythic,     .loot-roulette__item.rarity-mythic,
+.rou__item.rarity-runique,    .loot-roulette__item.rarity-runique    { border-color: var(--rarity-mythic-deep); }
+
+.rou__item-portrait {
+  width: 56px; height: 56px;
+  margin: 0 auto 6px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.rou__item-name {
+  font-family: var(--font-display);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Winner */
+.rou__item.is-winner,
+.loot-roulette__item.is-winner {
+  animation: pulse-halo 1.5s ease-in-out infinite;
+  box-shadow: 0 0 24px var(--rcolor, var(--brand-coral));
+}
+
+/* Status */
+.rou-status,
+.loot-roulette__status {
+  font-family: var(--font-display);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 12px;
+}
+.rou-status--spin,
+.loot-roulette__status--spin { color: var(--brand-grape); }
+.rou-status--done,
+.loot-roulette__status--done {
+  color: var(--rarity-legendary-deep);
+  text-shadow: 0 0 12px var(--rarity-legendary);
+}
+
+/* ============================================================
+   KEYFRAMES coffres
+   ============================================================ */
+@keyframes chest-burst {
+  0%   { opacity: 0; transform: scaleY(0.4); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: scaleY(2.4); }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .chest__body, .chest::before, .chest__rune,
+  .rou__strip, .rou__item.is-winner {
+    animation: none !important;
+    transition: none !important;
+  }
+  .chest.is-opening .chest__lid {
+    transform: rotateX(-100deg);   /* on garde l'état final mais sans transition */
+  }
+}

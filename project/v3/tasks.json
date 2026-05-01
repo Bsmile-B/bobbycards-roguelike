@@ -1,0 +1,392 @@
+[
+  {
+    "id": "V3-T1",
+    "title": "Étendre les types V3 (Settings, CombatSpeed, CombatAnimEvent, LootboxPity, AnimTrajectory) + extensions GameState/RunState/Enemy/SaveData",
+    "owner_role": "frontend-dev",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "Tous les types §5.1 specs.md déclarés. tsc strict passe. Aucun any."
+  },
+  {
+    "id": "V3-T2",
+    "title": "Migration save v3 : normalizeSave étendu (settings.combatSpeed=1, lootboxPity=0/0, saveVersion=3)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T1"
+    ],
+    "status": "done",
+    "acceptance": "Save V2 chargée → migrée silencieusement vers v3. Or, fragments, persos forgés, reliques, pity conservés. Tests : suppression de localStorage → save vierge v3."
+  },
+  {
+    "id": "V3-T3",
+    "title": "Action SET_COMBAT_SPEED + sélecteur 3 boutons radio dans CombatFooter (#speed-1, #speed-1-25, #speed-1-5). Persistance localStorage sous-objet settings",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T1",
+      "V3-T2"
+    ],
+    "status": "done",
+    "acceptance": "Cliquer sur ×1.25 modifie playerAttackInterval et enemy.attackInterval lus dynamiquement. localStorage settings.combatSpeed mis à jour. CSS variable --combat-speed sur .combat-screen."
+  },
+  {
+    "id": "V3-T4",
+    "title": "Specs visuelles vitesse + animation tokens (durations CSS scalées via --combat-speed)",
+    "owner_role": "ui-designer",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "design/v3/animations.md décrit : durations base, scaling formula, valeurs cibles pour chaque keyframe (attack-pulse, projectile-*, enemy-shake, ally-shake)."
+  },
+  {
+    "id": "V3-T5",
+    "title": "Spec design des trajectoires d'attaque (5 types) + projectiles SVG/CSS",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T4"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/projectiles.md : pour chaque type (physical/magic/heal/shield/poison) — forme, couleur, durée, easing, particules, version reduced-motion. Ascii-render des 5 trajectoires."
+  },
+  {
+    "id": "V3-T6",
+    "title": "CombatAnimationLayer (composant) + producers dans advanceCombat/useSpecial (append à animQueue, ne pas supprimer addFlash existants)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T1",
+      "V3-T5"
+    ],
+    "status": "done",
+    "acceptance": "Couche position absolute over .battlefield rend projectiles, impacts, floating numbers selon animQueue. TTL 800ms via âge dans TICK. Cap à 12 events simultanés."
+  },
+  {
+    "id": "V3-T7",
+    "title": "Animations attaque alliées : pulse héros + projectile selon physical/magic + impact ennemi + retour idle",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T6"
+    ],
+    "status": "done",
+    "acceptance": "Test visuel : héros pulse, projectile traverse vers ennemi, ennemi flash+shake, floating number visible. Réduced-motion : pulse remplacé par bordure statique."
+  },
+  {
+    "id": "V3-T8",
+    "title": "Animations attaque ennemies : pulse + intent emphasis + trajectoire + impact allié + retour. Cas hex (zone) + heal ennemi",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T7"
+    ],
+    "status": "done",
+    "acceptance": "Test visuel : ennemi pulse, projectile traverse vers allié ciblé, allié flash sombre+shake. Hex = onde de zone. Reduced-motion : statique."
+  },
+  {
+    "id": "V3-T9",
+    "title": "Réactions impacts (flash blanc ennemi 90ms, flash sombre allié, shake court 180ms). Aura blessé < 30% HP. Aura instable boss < 30%",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T8"
+    ],
+    "status": "done",
+    "acceptance": "Cibles touchées flash + shake. Auras low-HP visibles. Reduced-motion : opacity step."
+  },
+  {
+    "id": "V3-T10",
+    "title": "Spec design floating numbers améliorés (format -N PH/MAG/SOIN/BCL/CRIT/POISON/BRULURE, taille, couleur, regroupement)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T4"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/floating-numbers.md : tokens taille/couleur par variant, règle de regroupement <120ms, anti-superposition zigzag déterministe, version reduced-motion."
+  },
+  {
+    "id": "V3-T11",
+    "title": "Implémenter floating numbers améliorés (variant, taille crit, regroupement, anti-superposition)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T6",
+      "V3-T10"
+    ],
+    "status": "done",
+    "acceptance": "Crit visible plus grand. Rafale <120ms regroupée en `-24 / -8`. Pas de superposition (zigzag stable)."
+  },
+  {
+    "id": "V3-T12",
+    "title": "Spec design CharacterCardDetailed (layout, hiérarchie, badge rareté/rôle, portrait runique conservé, encadré compétence, fragments, rang)",
+    "owner_role": "ui-designer",
+    "depends_on": [],
+    "status": "done",
+    "acceptance": "design/v3/character-card-detailed.md + ascii-mockups. Tokens raretés (bordure + halo + animation subtile pour légendaire). Tient en grille collection 4 colonnes 1280×720."
+  },
+  {
+    "id": "V3-T13",
+    "title": "Implémenter CharacterCardDetailed et brancher dans Collection, Lootbox reveal, Final chest reveal, Creator preview",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T12"
+    ],
+    "status": "done",
+    "acceptance": "Collection rend les cartes détaillées. Reveal lootbox affiche la carte. Combat reste compact (CombatHero inchangé visuellement majeur)."
+  },
+  {
+    "id": "V3-T14",
+    "title": "Configuration visuelle des raretés : tokens CSS --rarity-{kind}-{border|glow|particle} + classes .rarity-{kind} renforcées (commun à mythique placeholder)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T12"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/css-tokens.md + design/v3/rarities.md. 5 raretés visuellement distinctes en bordure, halo, particules. Mythique = placeholder réservé. Pas fluo. Contrastes AA."
+  },
+  {
+    "id": "V3-T15",
+    "title": "Implémenter tokens raretés CSS + appliquer aux cartes détaillées et aux reveals",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T13",
+      "V3-T14"
+    ],
+    "status": "done",
+    "acceptance": "Chaque rareté visible distinctement en collection et reveal. Légendaire animé subtil. Build pass."
+  },
+  {
+    "id": "V3-T16",
+    "title": "Spec design coffres (5 tiers : damaged/bronze/silver/royal/runic) — apparence + animation idle + intensité lumineuse",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T14"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/chests.md décrit chaque tier : silhouette, palette, animation idle, particules. Reduced-motion : variante statique."
+  },
+  {
+    "id": "V3-T17",
+    "title": "Implémenter LootboxScreen refonte : phases idle → shake → roulette → reveal → opened. Aucune modification du reducer (OPEN_LOOTBOX dispatch déjà existant)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T16"
+    ],
+    "status": "done",
+    "acceptance": "Phase locale étendue. shake 320ms. Reduced-motion: idle → reveal direct. Tests Playwright : __game_test_skip_roulette exposé."
+  },
+  {
+    "id": "V3-T18",
+    "title": "Spec design LootRoulette (strip horizontal, 18 items, marqueur central, easing 2500ms, leurres tension)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T14"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/lootbox-roulette.md : layout strip, taille items, easing curve, biais des leurres (rareté ≥ finale dans positions 16-17). Reduced-motion : pas de strip, fade direct."
+  },
+  {
+    "id": "V3-T19",
+    "title": "Implémenter LootRoulette (rAF + easing manuel + arrêt déterministe sur index 14, hook test skip)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T17",
+      "V3-T18"
+    ],
+    "status": "done",
+    "acceptance": "Roulette s'arrête sur la récompense réelle (jamais ne triche). 2500ms total. Skip test < 50ms. Reduced-motion : 200ms fade."
+  },
+  {
+    "id": "V3-T20",
+    "title": "Spec design RarityReveal (5 effets : commun/rare/épique/légendaire + mythique placeholder)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T14"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/rarity-reveal.md : durée, particules count, glow, micro-shake écran (légendaire seul, ±2px), reduced-motion."
+  },
+  {
+    "id": "V3-T21",
+    "title": "Implémenter RarityReveal et brancher après l'arrêt de la roulette + sur ouverture coffre final",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T19",
+      "V3-T20"
+    ],
+    "status": "done",
+    "acceptance": "Effet visible et distinct par rareté. Légendaire = micro-shake écran. Reduced-motion : flash bordure 200ms."
+  },
+  {
+    "id": "V3-T22",
+    "title": "Pity system : champ save.lootboxPity, intégration dans rollLootbox (bump probabilité, reset au tirage rare+), affichage discret dans LootboxTab",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T2"
+    ],
+    "status": "done",
+    "acceptance": "5+ lootboxes sans rare → +5%. 8+ → +10%. Reset au tirage rare+. Persisté. Visible dans hub LootboxTab. render_game_to_text expose lootboxPity."
+  },
+  {
+    "id": "V3-T23",
+    "title": "Spec design BossIntroOverlay (séquence pleine page 1600ms : fond noir, nom h1, carte boss montée 600ms, message, aura stage)",
+    "owner_role": "ui-designer",
+    "depends_on": [
+      "V3-T4"
+    ],
+    "status": "done",
+    "acceptance": "design/v3/boss-intro.md : séquence frame-by-frame, accents par boss (Gardien or, Sorcière violet, Roi Brisé or-rouge), reduced-motion 200ms."
+  },
+  {
+    "id": "V3-T24",
+    "title": "Implémenter BossIntroOverlay + champ run.bossIntroAt + bypass tick combat pendant intro + hook __game_test_skip_boss_intro",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T23"
+    ],
+    "status": "done",
+    "acceptance": "Intro 1600ms avant chaque boss (waves 10/20/30). Tick combat ne tape pas pendant l'intro (animQueue âge quand même). Skip test exposé."
+  },
+  {
+    "id": "V3-T25",
+    "title": "Présence boss en combat : enemy-card--boss (scale +20%, label BOSS), seuils visuels 50% (flash unique boss-phase) et 30% (aura instable)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T24"
+    ],
+    "status": "done",
+    "acceptance": "Carte boss visiblement plus grande. Flash unique à 50%. Aura continue à 30%. enemy.bossPhase exposé render_game_to_text."
+  },
+  {
+    "id": "V3-T26",
+    "title": "Étendre render_game_to_text : settings.combatSpeed, run.animQueue.length, run.bossIntroAt, enemy.bossPhase, lootbox.phase, save.lootboxPity",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T1"
+    ],
+    "status": "done",
+    "acceptance": "Tous nouveaux champs présents. Champs existants conservés (backward-compat)."
+  },
+  {
+    "id": "V3-T27",
+    "title": "Couverture prefers-reduced-motion : audit checklist toutes les nouvelles animations, désactivation/alternative statique systématique",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T7",
+      "V3-T8",
+      "V3-T9",
+      "V3-T11",
+      "V3-T15",
+      "V3-T17",
+      "V3-T19",
+      "V3-T21",
+      "V3-T24",
+      "V3-T25"
+    ],
+    "status": "done",
+    "acceptance": "Checklist cochée pour chaque keyframe ajoutée. DevTools reduced-motion : aucune animation continue, tous les feedbacks sont visibles statiquement."
+  },
+  {
+    "id": "V3-T28",
+    "title": "Audit perf 60fps combat 5 ennemis ×1.5 (Chrome DevTools Performance, jank < 5%)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T27"
+    ],
+    "status": "pending",
+    "acceptance": "Recording 10s combat boss ×1.5 : 60fps moyen, < 5 frames > 16ms. Si jank : retirer particules de fond en combat (rapport dans review.md).",
+    "note": "Perf audit DevTools 60fps non mesuré en session — à valider en revue."
+  },
+  {
+    "id": "V3-T29",
+    "title": "Test golden path V3 + nouveaux test-actions JSON (set-speed.json, skip-roulette.json, skip-boss-intro.json)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T26",
+      "V3-T27"
+    ],
+    "status": "done",
+    "acceptance": "test-actions/ contient les 3 nouveaux JSON. Le golden path existant V2 (start-combat, reward-next, hub-*) passe sans modif. Build clean."
+  },
+  {
+    "id": "V3-T30",
+    "title": "Revue architecture après V3 : décision extraction src/components/* si App.tsx > 5500 lignes",
+    "owner_role": "architect",
+    "depends_on": [
+      "V3-T29"
+    ],
+    "status": "done",
+    "acceptance": "decisions.md V3 : décision documentée (extraire / garder). App.tsx final 5293 lignes < 5500, on garde in-place. Réévaluer en V3.1 si correctifs poussent au-delà."
+  },
+  {
+    "id": "V3-T31",
+    "title": "Major — Câbler pulses/shakes cartes (CombatHero + EnemyCard) consommant animQueue",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T9"
+    ],
+    "status": "done",
+    "acceptance": "Au tir, CombatHero/EnemyCard du sourceId reçoit classe .is-attacking (durée attack-pulse). À l'impact, EnemyCard cible reçoit .is-hit (shake 180ms) + flash blanc 90ms. CombatHero cible touché reçoit .is-hit + flash sombre 120ms. Implémentation via useMemo({activeAttackingIds, activeHitIds}) dérivé de state.run.animQueue (events 'attack-started' et 'target-hit' encore vivants), passé en props. Aucun ref DOM. Reduced-motion : .is-attacking/.is-hit retirées, opacity step uniquement."
+  },
+  {
+    "id": "V3-T32",
+    "title": "Major — Regroupement floating-numbers <120ms par target",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T11"
+    ],
+    "status": "done",
+    "acceptance": "Dans CombatAnimationLayer, les events damage-number/heal-number/shield-number ayant même targetId et delta <120ms sont agrégés en un seul rendu : label `-24 / -8 / -12` (max 3 valeurs). Le variant utilisé est celui du premier event du groupe. Crit reste séparé (jamais regroupé)."
+  },
+  {
+    "id": "V3-T33",
+    "title": "Major — Séquence d'ouverture coffre final (shake + lid rotate + beam + flash + reveal)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T16"
+    ],
+    "status": "done",
+    "acceptance": "FinalChest passe par phase locale 'idle' → 'shaking' (320ms) → 'opening' (lid rotate 400ms + flash blanc 200ms) → 'beam' (300ms faisceau) → 'reveal' (CharacterCardDetailed avec rarity-reveal--{rarity}). 'opened' et bouton open-chest IDs préservés (Playwright). Reduced-motion : idle → reveal direct sans flash."
+  },
+  {
+    "id": "V3-T34",
+    "title": "Major — Brancher CharacterCardDetailed dans la révélation du coffre final",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T33"
+    ],
+    "status": "done",
+    "acceptance": "Quand chest reward.kind === 'character', remplacer ChestResult par CharacterCardDetailed (même comportement qu'en lootbox reveal). reward.kind === 'fragments' / 'gold' : conserver ChestResult fallback."
+  },
+  {
+    "id": "V3-T35",
+    "title": "Minor — Mort boss : ralentissement 800ms + particules dorées",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T25"
+    ],
+    "status": "pending",
+    "acceptance": "À enemy.hp <= 0 && enemy.boss, déclencher classe .boss-defeated 800ms (scale + opacity fade + particules) avant handleVictory. Push event animQueue 'ko' avec isAlly=false. Reduced-motion : opacity step seulement."
+  },
+  {
+    "id": "V3-T36",
+    "title": "Minor — Exposer lootbox.phase dans render_game_to_text",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T17"
+    ],
+    "status": "pending",
+    "acceptance": "Remonter la phase locale du LootboxScreen vers state.pendingLootbox.phase (ajout champ optionnel) ou via callback ref exposé. render_game_to_text expose lootbox.phase ('idle'|'shake'|'roulette'|'reveal'|'opened')."
+  },
+  {
+    "id": "V3-T37",
+    "title": "Minor — Audit perf 60fps en x1.5 combat 5 ennemis (V3-T28 finalisation)",
+    "owner_role": "frontend-dev",
+    "depends_on": [
+      "V3-T31",
+      "V3-T32"
+    ],
+    "status": "pending",
+    "acceptance": "Recording Chrome DevTools Performance 10s combat boss x1.5 + 4 ennemis hex. Jank < 5%. Si > 5%, désactiver rarity-particle-rise sur cartes en contexte combat (limiter aux reveals/collection). Rapport dans review.md."
+  },
+  {
+    "id": "V3-T38",
+    "title": "Minor — Cohérence seuil 'wounded' CombatHero à 30% (au lieu de 35%)",
+    "owner_role": "frontend-dev",
+    "depends_on": [],
+    "status": "pending",
+    "acceptance": "App.tsx:3055 : remplacer `member.hp / member.maxHp <= 0.35` par `<= 0.30` pour aligner sur spec §4.4. Vérifier qu'aucun test V2 ne dépend du seuil 35%."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "description": "Open the team tab and swap a hero (composite ID team-swap-{outId}-{inId}).",
+  "target": "#hub-tab-team",
+  "steps": [
+    {
+      "buttons": ["left_mouse_button"],
+      "frames": 2,
+      "selector": "#hub-tab-team"
+    },
+    {
+      "buttons": [],
+      "frames": 60
+    }
+  ]
+}

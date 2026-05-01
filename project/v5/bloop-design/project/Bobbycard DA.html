@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<title>Bobbycard Roguelike — Direction Artistique</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="tokens.css"/>
+<link rel="stylesheet" href="artboards/_shared.css"/>
+<link rel="stylesheet" href="artboards/synthesis.css"/>
+<link rel="stylesheet" href="artboards/cards.css"/>
+<link rel="stylesheet" href="artboards/chests.css"/>
+<link rel="stylesheet" href="artboards/combat.css"/>
+
+<style>
+  body { background: #1a1530; }
+  /* Slight tweak to design canvas section title color contrast on dark host */
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#ffd6c2">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#ffd6c2"/>
+    <g transform="translate(600 400)">
+      <circle r="180" fill="#fff5e1" stroke="#261a3d" stroke-width="14"/>
+      <path d="M-90 -80 Q0 -140 90 -80 L90 -60 Q0 -120 -90 -60 Z" fill="#ff7a5c" stroke="#261a3d" stroke-width="10"/>
+      <circle cx="-40" cy="-10" r="14" fill="#261a3d"/>
+      <circle cx="40" cy="-10" r="14" fill="#261a3d"/>
+      <path d="M-30 40 Q0 70 30 40" stroke="#261a3d" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <circle cx="-65" cy="25" r="12" fill="#ff8b9c" opacity="0.7"/>
+      <circle cx="65" cy="25" r="12" fill="#ff8b9c" opacity="0.7"/>
+    </g>
+    <text x="600" y="690" text-anchor="middle" font-family="sans-serif" font-size="56" font-weight="900" fill="#261a3d">BOBBYCARD</text>
+  </svg>
+</template>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="artboards/synthesis.jsx"></script>
+<script type="text/babel" src="artboards/cards.jsx"></script>
+<script type="text/babel" src="artboards/chests.jsx"></script>
+<script type="text/babel" src="artboards/combat.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas title="Bobbycard Roguelike — Direction Artistique">
+      <DCSection id="da" title="Direction artistique — synthèse">
+        <DCArtboard id="synthesis" label="Synthèse DA · palette · typo" width={1280} height={760}>
+          <ArtboardSynthesis/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="cards" title="Carte personnage — 5 raretés">
+        <DCArtboard id="cards" label="Carte perso · 5 raretés + états" width={1280} height={920}>
+          <ArtboardCards/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="chests" title="Coffres & Loot Box">
+        <DCArtboard id="chests" label="5 tiers de coffre + roulette légendaire" width={1280} height={760}>
+          <ArtboardChests/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="combat" title="Combat — écran 1280×720">
+        <DCArtboard id="combat" label="3 héros · 2 ennemis · 1 boss · HUD complet" width={1280} height={920}>
+          <ArtboardCombat/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

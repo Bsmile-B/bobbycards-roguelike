@@ -1,0 +1,13 @@
+{
+  "description": "Skip le boss intro overlay via __game_test_skip_boss_intro pour reprendre le combat sans attendre 1600ms. V3-T24 + T29.",
+  "steps": [
+    {
+      "evaluate": "window.__game_test_skip_boss_intro && window.__game_test_skip_boss_intro()",
+      "frames": 4
+    },
+    {
+      "buttons": [],
+      "frames": 30
+    }
+  ]
+}
