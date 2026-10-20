@@ -1,21 +1,68 @@
-MIT License
+Bobby Cards — Logiciel propriétaire / Proprietary software
+Copyright (c) 2026 Bob Cabarrus Melane. Tous droits réservés / All rights reserved.
 
-Copyright (c) 2026 Bsmile-B
+=========================================================================
+FR — Tous droits réservés
+=========================================================================
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Ce dépôt, le jeu « Bobby Cards » et l'ensemble de leurs composants — code source, code
+objet, design, interfaces, textes, ressources graphiques et sonores, bases
+de données et documentation — sont la propriété exclusive de leur
+titulaire et sont protégés par le droit de la propriété intellectuelle
+français et par les conventions internationales. Les composants de tiers
+éventuellement inclus restent soumis à leurs propres licences.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+AUCUNE LICENCE n'est concédée, à titre gratuit ou onéreux, sauf
+autorisation écrite préalable et expresse du titulaire des droits. Sont
+notamment interdites, en tout ou partie : la reproduction, la
+représentation, l'utilisation, la modification, l'adaptation, la
+traduction, la distribution, la publication, la mise à disposition, la
+décompilation et l'ingénierie inverse (reverse engineering), dans les
+limites prévues par la loi.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Le fait que ce code source soit consultable publiquement ne vaut pas
+licence : sa lecture ne confère aucun droit d'utilisation, de copie ou de
+réutilisation.
+Toute contrefaçon est sanctionnée par les articles L.335-2 et suivants du
+Code de la propriété intellectuelle.
+
+Les versions de ce dépôt publiées antérieurement sous licence MIT restent
+régies par cette licence pour ces seules versions. Le présent texte
+s'applique à toute version publiée à compter de son ajout.
+
+Ce logiciel est fourni sans aucune garantie ; dans toute la mesure permise
+par la loi applicable, le titulaire des droits décline toute
+responsabilité quant à son utilisation.
+
+=========================================================================
+EN — All rights reserved
+=========================================================================
+
+This repository, the "Bobby Cards" game and all of their components — source code,
+object code, design, interfaces, texts, graphic and audio assets,
+databases and documentation — are the exclusive property of their rights
+holder and are protected by French intellectual-property law and by
+international conventions. Any third-party components that may be included
+remain subject to their own licenses.
+
+NO LICENSE is granted, whether for free or for a fee, without the prior
+written and express permission of the rights holder. In particular, the
+following are prohibited, in whole or in part: reproduction, display, use,
+modification, adaptation, translation, distribution, publication, making
+available, decompilation and reverse engineering, to the extent permitted
+by law.
+
+The fact that this source code is publicly viewable does not constitute a
+license: viewing it grants no right to use, copy or reuse it.
+Infringement is punishable under Articles L.335-2 et seq. of the French
+Intellectual Property Code.
+
+Versions of this repository previously published under the MIT License
+remain governed by that license for those versions only. This text applies
+to every version published from the date it was added.
+
+This software is provided with no warranty of any kind; the rights holder
+shall not be liable for any claim, damages or other liability arising from
+its use, to the maximum extent permitted by applicable law.
+
+Contact : propriétaire du dépôt GitHub Bsmile-B / owner of the Bsmile-B GitHub account
